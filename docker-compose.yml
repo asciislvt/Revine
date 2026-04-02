@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html:z
+      - vod_data:/data
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: vod
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: vod
+    ports:
+      - "3306:3306"
+    volumes:
+      - vod_db:/var/lib/mysql
+
+volumes:
+  vod_data:
+  vod_db:
