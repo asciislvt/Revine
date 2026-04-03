@@ -19,7 +19,7 @@
     <div id="container">
       <h1>Async Upload Test</h1>
 
-      <form id="upload-form" method="POST" enctype="multipart/form-data">
+      <form id="upload-form" autocomplete="off" method="POST" enctype="multipart/form-data">
         <label>
           Video Title:
           <input type="text" name="video-title" placeholder="Video Title">
