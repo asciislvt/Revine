@@ -10,4 +10,5 @@ RUN apt-get update; \
 # For hls streaming ;3
 COPY ./docker/apache-hls.conf /etc/apache2/conf-available/hls.conf
 RUN a2enconf hls; \
-  mkdir /data/tmp
+  mkdir /data/tmp; \
+  mkdir /data/videos
