@@ -1,9 +1,11 @@
 # Web Authoring Final Project
 
 ## REVINE
+
 Video Sharing Platform for users to upload and share 8 second videos.
 
 ### Stack
+
 - Apache web server
   - Serves frontend and backend.
   - Serves video files from the filesystem.
@@ -17,6 +19,7 @@ Video Sharing Platform for users to upload and share 8 second videos.
   - Provides user interface for registration, login, video upload, and video browsing.
 
 ### Features
+
 - User Registration and Authentication
 - Video Uploading
 - Video Processing (transcoding and thumbnail generation)

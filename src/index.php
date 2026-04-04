@@ -34,6 +34,7 @@
         <input type="hidden" name="MAX_FILE_SIZE" value="300000000">
         <input type="file" name="uploaded-video">
         <button id="submit-video">Upload</button>
+        <p id="upload-url"></p>
       </form>
     </div>
 

@@ -5,6 +5,7 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www/html:z
+      - ./api:/var/www/api:z
       - vod_data:/data
     depends_on:
       - mariadb
