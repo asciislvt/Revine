@@ -1,14 +1,15 @@
-create table videos
+create table if not exists videos
 (
     id          int auto_increment
         primary key,
-    title       varchar(255) default 'My New Video :D'               not null,
-    description varchar(255) default 'New video uploaded to REVINE!' not null,
     video_id    varchar(12)                                          null,
-    uploaded_on date         default curdate()                       not null
+    title       varchar(255) default 'My New Video :D'               not null,
+    description varchar(256) default 'New video uploaded to REVINE!' not null,
+    uploaded_on date         default curdate()                       not null,
+    status      enum('uploaded', 'processing', 'ready') default 'uploaded'           not null
 );
 
-create table users
+create table if not exists users
 (
     id       int auto_increment
         primary key,

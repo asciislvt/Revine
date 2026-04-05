@@ -23,7 +23,7 @@ $meta = $stmt->fetch();
 <html>
   <head>
     <meta charset="utf-8">
-    <title><?= $meta['title'] ?> - REVINE</title>
+    <title><?= $meta['title'] ?> | REVINE</title>
   </head>
   <body>
     <?php if ($hash === '') : ?>
@@ -36,6 +36,7 @@ $meta = $stmt->fetch();
         Your browser does not support the video tag.
       </video>
       <h3>Video Title: <?= htmlspecialchars($meta['title']) ?></h3>
+      <p>Video Uploaded: <?= htmlspecialchars(date("F d, o", strtotime($meta['uploaded_on']))) ?></p>
       <p>Video Description: <?= htmlspecialchars($meta['description']) ?></p>
     <?php endif; ?>
   </body>

@@ -20,6 +20,7 @@ services:
       - "3306:3306"
     volumes:
       - vod_db:/var/lib/mysql
+      - ./docker/db-setup.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   vod_data:

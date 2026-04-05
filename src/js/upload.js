@@ -17,17 +17,11 @@ form.addEventListener('submit', async (event) => {
       body: formData,
     });
 
-    const blob = await response.blob();
-
-    console.log('Upload response:', blob.text());
-
-    const json = JSON.parse(await blob.text());
+    const json = await response.json();
 
     if (json.url) {
       urlElement.innerHTML = `<a href="${json.url}" target="_blank">Video uploaded, view here!</a>`;
     }
-
-    console.log(json);
   } catch (error) {
     console.error('Error uploading video:', error);
   }

@@ -9,6 +9,7 @@ use Revine\VideoValidator,
 
 $VALID_URL_CHARS = '/[^A-Za-z0-9_-]/iu';
 $VIDEO_DIR = '/data/videos';
+$TEMP_DIR = '/data/tmp';
 
 $uploaded_video = $_FILES['uploaded-video'] ?? null;
 
@@ -29,7 +30,7 @@ if (!$is_valid) {
     $url = "http://localhost:8080/video.php?hash=$hash_name";
 
     // Create the target directory for the video and move the uploaded file there
-    $target_path = "$VIDEO_DIR/$hash_name";
+    $target_path = "$TEMP_DIR/$hash_name";
     $target_file = "$target_path/src.mp4";
 
     if (!is_dir($target_path)) {
