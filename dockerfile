@@ -11,8 +11,8 @@ RUN apt-get update; \
   docker-php-ext-install pdo_mysql; \
   a2enmod headers rewrite;
 
-COPY ./docker/*.conf /etc/apache2/conf-available/
-RUN a2enconf hls api-routes
+COPY ./docker/apache/ /etc/apache2/conf-available/
+RUN a2enconf videos
 
 # File size limit for uploads
-COPY ./docker/file_size.ini /usr/local/etc/php/conf.d/custom.ini
+COPY ./docker/php/file_size.ini /usr/local/etc/php/conf.d/custom.ini

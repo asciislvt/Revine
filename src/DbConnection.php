@@ -1,12 +1,10 @@
 <?php
 
-namespace Revine;
+namespace Revine\App;
 
 use PDO,
 
-    PDOException,
-
-    RuntimeException;
+    Exception;
 
 class DbConnection
 {
@@ -15,13 +13,11 @@ class DbConnection
 
     private function __construct()
     {
-        $host = 'mariadb';
-        $db = 'vod';
-        $user = 'vod';
-        $pass = 'password';
-        $charset = 'utf8mb4';
+        $host = getenv('DB_HOST');
+        $dbname = getenv('DB_NAME');
+        $username = getenv('DB_USER');
+        $password = getenv('DB_PASSWORD');
 
-        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -29,17 +25,18 @@ class DbConnection
         ];
 
         try {
-            $this->connection = new PDO($dsn, $user, $pass, $options);
-        } catch (PDOException $e) {
-            throw new RuntimeException('Database connection failed: ' . $e->getMessage());
+            $this->connection = new \PDO("mysql:host=$host;dbname=$dbname", $username, $password, $options);
+        } catch (\PDOException $e) {
+            throw new Exception("Database connection failed: " . $e->getMessage());
         }
     }
 
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new DbConnection();
+            self::$instance = new self();
         }
+
         return self::$instance;
     }
 

@@ -7,7 +7,7 @@ chmod -R u+rwX,g+rwX /data
 
 # creating folder for php restful api
 # mkdir -p /var/www/api
-chown -R www-data:www-data /var/www/api
-chmod -R 777 /var/www/api
+# chown -R www-data:www-data /var/www/api
+# chmod -R 777 /var/www/api
 
 exec apache2-foreground
