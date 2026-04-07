@@ -2,7 +2,7 @@ services:
   app:
     build: .
     environment:
-      - DB_HOST=mariadb
+      - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASSWORD}
@@ -10,7 +10,7 @@ services:
       - "8080:80"
     volumes:
       - ./public:/var/www/html:z
-      - ./src/:/var/www/app
+      - ./src/:/var/www/app:z
       - vod_data:/data
     depends_on:
       - mariadb
@@ -25,7 +25,7 @@ services:
       - "3306:3306"
     volumes:
       - vod_db:/var/lib/mysql
-      - ./docker/maria-db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/maria-db/revine-tables-updated.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 volumes:
   vod_data:
