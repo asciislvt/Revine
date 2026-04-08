@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
@@ -30,9 +32,10 @@ if (isset($_SESSION['user_id'])) {
         <br />
         <button id="submit-login">Login</button>
       </form>
+      <p id="error-message" style="color: red;"></p>
 
       <p>Don't have an account? <a href="register.php">Register here</a>.</p>
     </div>
-
-    <!-- <script src="js/login.js"></script> -->
+    <script src="js/login.js"></script>
+  </body>
 </html>

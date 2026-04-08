@@ -14,7 +14,7 @@ session_start();
     <div id="container">
       <h1>Upload A Video</h1>
 
-      <?php if (!isset($_SESSION['username'])) : ?>
+      <?php if (!isset($_SESSION['user_id'])) : ?>
         <p>You must be logged in to upload a video. <a href="login.php">Login here</a>.</p>
       <?php else : ?>
         <form id="upload-form" autocomplete="off" method="POST" enctype="multipart/form-data">
@@ -38,4 +38,5 @@ session_start();
     </div>
 
     <!-- <script src="js/upload.js"></script> -->
+  </body>
 </html>

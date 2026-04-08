@@ -18,14 +18,14 @@ services:
     image: mariadb
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MARIADB_USER: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
     volumes:
       - vod_db:/var/lib/mysql
-      - ./docker/maria-db/revine-tables-updated.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # - ./docker/maria-db/revine-tables-updated.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 volumes:
   vod_data:

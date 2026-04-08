@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,7 +19,11 @@
       <nav>
         <ul>
           <li><a href="upload.php">Upload</a></li>
-          <li><a href="login.php">Login</a></li>
+          <?php if (!isset($_SESSION['user_id'])) : ?>
+            <li><a href="login.php">Login</a></li>
+          <?php else : ?>
+            <li><a href="api/logout.php">Logout</a></li>
+          <?php endif; ?>
         </ul>
       </nav>
     </div>

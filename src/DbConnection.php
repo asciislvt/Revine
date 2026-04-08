@@ -1,6 +1,6 @@
 <?php
 
-namespace Revine\App;
+namespace Revine;
 
 use PDO,
 
@@ -15,8 +15,10 @@ class DbConnection
     {
         $host = getenv('DB_HOST');
         $dbname = getenv('DB_NAME');
+
+        $dsn = "mysql:host=$host;dbname=$dbname";
         $username = getenv('DB_USER');
-        $password = getenv('DB_PASSWORD');
+        $password = getenv('DB_PASS');
 
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -25,7 +27,7 @@ class DbConnection
         ];
 
         try {
-            $this->connection = new \PDO("mysql:host=$host;dbname=$dbname", $username, $password, $options);
+            $this->connection = new \PDO($dsn, $username, $password, $options);
         } catch (\PDOException $e) {
             throw new Exception("Database connection failed: " . $e->getMessage());
         }
