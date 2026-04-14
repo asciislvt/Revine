@@ -2,6 +2,8 @@
 
 session_start();
 
+$isLoggedIn = isset($_SESSION['user_id']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,12 +16,13 @@ session_start();
     <div id="container">
       <header>
         <h1>Revine</h1>
-        <p></p>
+        <p>Hello, <?= ($isLoggedIn ? $_SESSION['username'] : "Stranger") ?>.</p>
+        <p>Upload and share your videos with the world!</p>
       </header>
       <nav>
         <ul>
           <li><a href="upload.php">Upload</a></li>
-          <?php if (!isset($_SESSION['user_id'])) : ?>
+          <?php if (!$isLoggedIn) : ?>
             <li><a href="login.php">Login</a></li>
           <?php else : ?>
             <li><a href="api/logout.php">Logout</a></li>

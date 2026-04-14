@@ -29,7 +29,8 @@ if (!$userAuth) {
 } else {
     session_start();
     session_regenerate_id(true);
-    $_SESSION['user_id'] = $userAuth['userId'];
+    $_SESSION['user_id'] = $userAuth['user_id'];
+    $_SESSION['username'] = $userAuth['username'];
     http_response_code(200);
     echo json_encode(['success' => true]);
 }

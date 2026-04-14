@@ -1,43 +1,45 @@
-const form = document.getElementById('login-form');
+const form = document.getElementById('upload-form');
 const errorElement = document.getElementById('error-message');
 
-// Reset the form to clear any pre-filled values
 form.reset();
 
-// Handle form submission
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+  clearError();
   const formData = new FormData(form);
 
-  // Validate form data before sending
   const isValid = validateForm(formData);
   if (!isValid) {
     return;
   }
 
-  // Send form data to the server
   try {
-    const response = await fetch('/api/auth-user.php', {
+    const response = await fetch('/api/upload-video.php', {
       method: 'POST',
       body: formData
     });
 
+    // console.log('Response status:', response.text());
+
     if (response.ok) {
-      window.location.href = '/index.php';
+      const result = await response.json();
+      console.log('Upload successful:', result);
     } else {
-      displayError(result.error || 'Login failed. Please try again.');
+      displayError('Upload failed. Please try again.');
     }
   } catch (error) {
-    displayError('An error occurred while logging in. Please try again later.');
+    displayError('An error occurred while uploading. Please try again later.');
+    console.error('Error uploading video:', error);
   }
 });
 
 function validateForm(data) {
-  if (!data.get('username')) {
-    displayError('Username is required');
+  if (!data.get('title')) {
+    displayError('Title is required');
     return false;
-  } else if (!data.get('password')) {
-    displayError('Password is required');
+  }
+  if (!data.get('video-file')) {
+    displayError('File is required');
     return false;
   }
 

@@ -26,9 +26,13 @@ class Authentiaction
             return false; // Invalid password
         }
 
+        $userId = $this->userQuery->getUserIdByUsername($username);
+        $username = $this->userQuery->getUsernameById($userId);
+
         return password_verify($password, $storedHash) ? [
             "isValid" => true,
-            "userId" => $this->userQuery->getUserIdByUsername($username)
+            "user_id" => $userId,
+            "username" => $username
         ] : false;
     }
 }

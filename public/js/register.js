@@ -43,7 +43,6 @@ form.addEventListener('submit', async (event) => {
       displayError(result.error || 'Registration failed. Please try again.');
     }
   } catch (error) {
-    console.error('Error:', error.text);
     displayError('An error occurred while registering. Please try again later.');
   }
 });

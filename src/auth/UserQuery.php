@@ -23,6 +23,15 @@ class UserQuery
         return $stmt->fetch();
     }
 
+    public function getUsernameById($userId)
+    {
+        $stmt = $this->db->prepare("SELECT username FROM users WHERE id = :id");
+        $stmt->bindParam(':id', $userId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
     public function getUserIdByUsername($username)
     {
         $stmt = $this->db->prepare("SELECT id FROM users WHERE username = :username");
