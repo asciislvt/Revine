@@ -59,10 +59,14 @@ class VideoUploader
         }
 
         // TRANSCODE VIDEO
+        // NOTE: thumbnail generation HAS TO done after transcoding, trust ;)
         $transcodeResult = self::transcodeVideo($tempFilePath, $finalFilePath);
+        $thumbnailResult = self::generateThumbnail($finalFilePath, $finalDir . '/thumbnail.jpg');
 
         if ($transcodeResult !== true) {
             return $transcodeResult;
+        } elseif ($thumbnailResult !== true) {
+            return $thumbnailResult;
         }
 
         $deleteTempResult = unlink($tempFilePath);
@@ -75,6 +79,7 @@ class VideoUploader
             ];
         }
 
+        // Aight we done, throw that bitch in the database.
         $dbInsertResult = self::databaseInsert($videoId, $title, $description, $userId);
 
         if ($dbInsertResult !== true) {
@@ -137,13 +142,13 @@ class VideoUploader
     private static function transcodeVideo($inputPath, $outputPath)
     {
         $ffmpegCommand = "ffmpeg -i $inputPath -t 10 \
-                        -vf \"scale=1080:1350:force_original_aspect_ratio=decrease,\
-                        pad=1080:1350:(ow-iw)/2:(oh-ih)/2\" \
-                        -c:v libsvtav1 -crf 30 -preset 6 \
-                        -pix_fmt yuv420p \
-                        -c:a aac -b:a 128k \
-                        -movflags +faststart \
-                        $outputPath";
+                          -vf \"scale=1080:1350:force_original_aspect_ratio=decrease,\
+                          pad=1080:1350:(ow-iw)/2:(oh-ih)/2\" \
+                          -c:v libsvtav1 -crf 30 -preset 6 \
+                          -pix_fmt yuv420p \
+                          -c:a aac -b:a 128k \
+                          -movflags +faststart \
+                          $outputPath";
 
         exec($ffmpegCommand, $output, $returnCode);
 
@@ -151,6 +156,24 @@ class VideoUploader
             return [
               "status" => "error",
               "message" => "Video transcoding failed with error code: $returnCode",
+            ];
+        }
+
+        return true;
+    }
+
+    private static function generateThumbnail($inputPath, $thumbnailPath)
+    {
+        $ffmpegCommand = "ffmpeg -i $inputPath \
+                          -vf \"select='gte(t,9)',scale=320:-1\" \
+                          -frames:v 1 $thumbnailPath";
+
+        exec($ffmpegCommand, $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            return [
+              "status" => "error",
+              "message" => "Thumbnail generation failed with error code: $returnCode",
             ];
         }
 

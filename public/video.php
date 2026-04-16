@@ -33,11 +33,14 @@ if ($queryResult === null) {
   </head>
   <body>
     <h1><?= htmlspecialchars($queryResult['title']) ?></h1>
+    <p><?= htmlspecialchars($queryResult['uploade_date']) ?></p>
     <p>Uploaded by: <?= htmlspecialchars($queryResult['username']) ?></p
-    <p><?= nl2br(htmlspecialchars($queryResult['description'])) ?></p>
-    <video controls width="640" height="360">
+    <p><?= htmlspecialchars($queryResult['description']) ?></p>
+    <video controls width="720" height="905">
       <source src="<?= htmlspecialchars($queryResult['video_url']); ?>" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
+    <p>Testing out thumbnail generation: </p>
+    <img src="<?= htmlspecialchars($queryResult['thumbnail_url']); ?>" alt="Video Thumbnail" />
   </body>
 </html>
