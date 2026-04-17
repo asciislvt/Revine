@@ -1,24 +1,31 @@
 services:
   app:
     build: .
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASSWORD}
     ports:
       - "8080:80"
     volumes:
-      - ./src:/var/www/html:z
+      - ./public:/var/www/html:z
+      - ./src/:/var/www/app:z
       - vod_data:/data
     depends_on:
       - mariadb
   mariadb:
     image: mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_USER: vod
-      MARIADB_PASSWORD: password
-      MARIADB_DATABASE: vod
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
     volumes:
       - vod_db:/var/lib/mysql
+      # - ./docker/maria-db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   vod_data:

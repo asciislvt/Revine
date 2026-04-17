@@ -1,0 +1,29 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+/* Styling for the video-card container */
+.video-card {
+    max-width: 75%;
+    height: auto;
+    border: 2px solid #999;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.video-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-info {
+  padding: 1.2rem;
+}
+
+.card-thumbnail img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
