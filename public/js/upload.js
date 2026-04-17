@@ -1,5 +1,6 @@
 const form = document.getElementById('upload-form');
 const errorElement = document.getElementById('error-message');
+const videoUrl = document.getElementById('video-url');
 
 form.reset();
 
@@ -19,11 +20,12 @@ form.addEventListener('submit', async (event) => {
       body: formData
     });
 
-    // console.log('Response status:', response.text());
-
     if (response.ok) {
       const result = await response.json();
-      console.log('Upload successful:', result);
+
+      form.reset();
+      videoUrl.textContent = `Video uploaded successfully! View it here!`;
+      videoUrl.href = `/video.php?id=${result.videoId}`;
     } else {
       displayError('Upload failed. Please try again.');
     }

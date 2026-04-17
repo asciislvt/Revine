@@ -2,10 +2,24 @@
 
 namespace Revine;
 
+use Revine\VideoTranscoder;
+
 class VideoUploader
 {
-    public static function upload($videoFile, $title, $description, $userId)
+    private $TEMP_DIR;
+    private $UPLOAD_DIR;
+    private $VALID_URL_CHARS = '/[^A-Za-z0-9_-]/iu';
+
+    public function __construct($tempDir = '/data/tmp/', $uploadDir = '/data/videos/')
     {
+        $this->TEMP_DIR = $tempDir;
+        $this->UPLOAD_DIR = $uploadDir;
+    }
+
+    public function upload($videoFile, $title, $description, $userId)
+    {
+        require_once __DIR__ . '/VideoTranscoder.php';
+
         if (empty($videoFile) || $videoFile['error'] !== UPLOAD_ERR_OK) {
             return [
               "status" => "error",
@@ -27,16 +41,13 @@ class VideoUploader
             ];
         }
 
-        $TEMP_DIR = '/data/tmp/';
-        $UPLOAD_DIR = '/data/videos/';
-
         // Create unique ID for video
         $videoId = self::generateUniqueId($videoFile['name']);
 
         // Create temp and final directories and file paths
         $fileExtenstion = pathinfo($videoFile['name'], PATHINFO_EXTENSION);
 
-        $tempDir = $TEMP_DIR . $videoId;
+        $tempDir = $this->TEMP_DIR . $videoId;
         $tempFilePath = $tempDir . '/' . $videoId . '_src.' . $fileExtenstion;
         $tempDirResult = self::createDirectory($tempDir);
 
@@ -44,7 +55,7 @@ class VideoUploader
             return $tempDirResult;
         }
 
-        $finalDir = $UPLOAD_DIR . $videoId;
+        $finalDir = $this->UPLOAD_DIR . $videoId;
         $finalFilePath = $finalDir . '/' . $videoId . '.' . $fileExtenstion;
         $finalDirResult = self::createDirectory($finalDir);
         if ($finalDirResult !== true) {
@@ -58,26 +69,28 @@ class VideoUploader
             ];
         }
 
+        http_response_code(202);
+
         // TRANSCODE VIDEO
-        // NOTE: thumbnail generation HAS TO done after transcoding, trust ;)
-        $transcodeResult = self::transcodeVideo($tempFilePath, $finalFilePath);
-        $thumbnailResult = self::generateThumbnail($finalFilePath, $finalDir . '/thumbnail.jpg');
+        $videoTranscoder = new VideoTranscoder();
+        $transcodeResult = $videoTranscoder->transcodeVideo($tempFilePath, $finalFilePath);
+        $thumbnailResult = $videoTranscoder->generateThumbnail($finalFilePath, $finalDir . '/thumbnail.jpg');
 
         if ($transcodeResult !== true) {
+            self::cleanupTempFiles($tempFilePath, $tempDir);
+            self::cleanupFinalFiles($finalFilePath, $finalDir);
             return $transcodeResult;
         } elseif ($thumbnailResult !== true) {
+            self::cleanupTempFiles($tempFilePath, $tempDir);
+            self::cleanupFinalFiles($finalFilePath, $finalDir);
             return $thumbnailResult;
         }
 
-        $deleteTempResult = unlink($tempFilePath);
-        $deleteTempDirResult = rmdir($tempDir);
-
-        if (!$deleteTempResult || !$deleteTempDirResult) {
-            return [
-              "status" => "error",
-              "message" => "Failed to clean up temporary files.",
-            ];
+        $cleanup = self::cleanupTempFiles($tempFilePath, $tempDir);
+        if ($cleanup !== true) {
+            return $cleanup;
         }
+
 
         // Aight we done, throw that bitch in the database.
         $dbInsertResult = self::databaseInsert($videoId, $title, $description, $userId);
@@ -93,7 +106,7 @@ class VideoUploader
         ];
     }
 
-    private static function databaseInsert($videoId, $title, $description, $userId)
+    private function databaseInsert($videoId, $title, $description, $userId)
     {
         require_once __DIR__ . '/DbConnection.php';
 
@@ -124,14 +137,14 @@ class VideoUploader
         return true;
     }
 
-    private static function sanatizeTitle($title)
+    private function sanatizeTitle($title)
     {
         $title = trim(htmlspecialchars($title));
         $title = strip_tags($title);
         return $title;
     }
 
-    private static function sanatizeDescription($description)
+    private function sanatizeDescription($description)
     {
         $description = trim(preg_replace('/\s+/', ' ', $description));
         $description = strip_tags($description);
@@ -139,48 +152,8 @@ class VideoUploader
         return $description;
     }
 
-    private static function transcodeVideo($inputPath, $outputPath)
-    {
-        $ffmpegCommand = "ffmpeg -i $inputPath -t 10 \
-                          -vf \"scale=1080:1350:force_original_aspect_ratio=decrease,\
-                          pad=1080:1350:(ow-iw)/2:(oh-ih)/2\" \
-                          -c:v libsvtav1 -crf 30 -preset 6 \
-                          -pix_fmt yuv420p \
-                          -c:a aac -b:a 128k \
-                          -movflags +faststart \
-                          $outputPath";
 
-        exec($ffmpegCommand, $output, $returnCode);
-
-        if ($returnCode !== 0) {
-            return [
-              "status" => "error",
-              "message" => "Video transcoding failed with error code: $returnCode",
-            ];
-        }
-
-        return true;
-    }
-
-    private static function generateThumbnail($inputPath, $thumbnailPath)
-    {
-        $ffmpegCommand = "ffmpeg -i $inputPath \
-                          -vf \"select='gte(t,9)',scale=320:-1\" \
-                          -frames:v 1 $thumbnailPath";
-
-        exec($ffmpegCommand, $output, $returnCode);
-
-        if ($returnCode !== 0) {
-            return [
-              "status" => "error",
-              "message" => "Thumbnail generation failed with error code: $returnCode",
-            ];
-        }
-
-        return true;
-    }
-
-    private static function createDirectory($path)
+    private function createDirectory($path)
     {
         if (!is_dir($path)) {
             if (!mkdir($path, 0775, true)) {
@@ -194,11 +167,40 @@ class VideoUploader
         return true;
     }
 
-    private static function generateUniqueId($fileName)
+    private function generateUniqueId($fileName)
     {
-        $VALID_URL_CHARS = '/[^A-Za-z0-9_-]/iu';
         $rawHash = hash('xxh3', escapeshellcmd($fileName) . time(), true);
-        $hash = preg_replace($VALID_URL_CHARS, '', base64_encode($rawHash));
+        $hash = preg_replace($this->VALID_URL_CHARS, '', base64_encode($rawHash));
         return substr($hash, 0, 8);
+    }
+
+    private function cleanupTempFiles($tempFilePath, $tempDir)
+    {
+        $deleteTempResult = unlink($tempFilePath);
+        $deleteTempDirResult = rmdir($tempDir);
+
+        if (!$deleteTempResult || !$deleteTempDirResult) {
+            return [
+              "status" => "error",
+              "message" => "Failed to clean up temporary files.",
+            ];
+        }
+
+        return true;
+    }
+
+    private function cleanupFinalFiles($finalFilePath, $finalDir)
+    {
+        $deleteFinalResult = unlink($finalFilePath);
+        $deleteFinalDirResult = rmdir($finalDir);
+
+        if (!$deleteFinalResult || !$deleteFinalDirResult) {
+            return [
+              "status" => "error",
+              "message" => "Failed to clean up final files.",
+            ];
+        }
+
+        return true;
     }
 }

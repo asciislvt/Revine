@@ -1,6 +1,6 @@
 <?php
 
-namespace Revine\Auth;
+namespace Revine;
 
 use Revine\DbConnection;
 
@@ -10,7 +10,7 @@ class UserQuery
 
     public function __construct()
     {
-        require_once __DIR__ . '/../DbConnection.php';
+        require_once __DIR__ . '/DbConnection.php';
         $this->db = DbConnection::getInstance()->getConnection();
     }
 

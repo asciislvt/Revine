@@ -4,61 +4,50 @@ namespace Revine;
 
 use Revine\DbConnection,
 
-    Revine\Auth\UserQuery;
+    Revine\UserQuery;
 
 class VideoQuery
 {
-    public static function getRecentlyUploaded()
+    private $db;
+
+    public function __construct()
     {
         require_once __DIR__ . '/DbConnection.php';
+        $this->db = DbConnection::getInstance()->getConnection();
+    }
 
-        $db = DbConnection::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
-                              FROM videos v
-                              JOIN users u ON u.id = v.uploaded_by
-                              ORDER BY v.uploaded_on DESC
-                              LIMIT 10 OFFSET 0;");
+    public function getRecentlyUploaded()
+    {
+
+        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
+                                    FROM videos v
+                                    JOIN users u ON u.id = v.uploaded_by
+                                    ORDER BY v.uploaded_on DESC
+                                    LIMIT 10 OFFSET 0;");
         $stmt->execute();
 
         return $stmt->fetchAll();
     }
 
-    public static function getTrending()
+    public function getTrending()
     {
-        require_once __DIR__ . '/DbConnection.php';
-
-        $db = DbConnection::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
-                              FROM videos v
-                              JOIN users u ON u.id = v.uploaded_by
-                              ORDER BY v.view_count DESC
-                              LIMIT 10 OFFSET 0;");
+        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
+                                    FROM videos v
+                                    JOIN users u ON u.id = v.uploaded_by
+                                    ORDER BY v.view_count DESC
+                                    LIMIT 10 OFFSET 0;");
         $stmt->execute();
 
         return $stmt->fetchAll();
     }
 
-    public static function getVideoMetadata($videoId)
+    public function getVideoById($videoId)
     {
-        require_once __DIR__ . '/DbConnection.php';
+        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
+                                    FROM videos v
+                                    JOIN users u ON u.id = v.uploaded_by
+                                    WHERE v.video_id = :videoId");
 
-        $db = DbConnection::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM videos WHERE video_id = :videoId");
-        $stmt->bindParam(':videoId', $videoId, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch();
-    }
-
-    public static function getVideoById($videoId)
-    {
-        require_once __DIR__ . '/DbConnection.php';
-        require_once __DIR__ . '/auth/UserQuery.php';
-
-        $db = DbConnection::getInstance()->getConnection();
-        $userQuery = new UserQuery();
-
-        $stmt = $db->prepare("SELECT * FROM videos WHERE video_id = :videoId");
         $stmt->bindParam(':videoId', $videoId, \PDO::PARAM_INT);
         $stmt->execute();
 
@@ -68,7 +57,7 @@ class VideoQuery
             return null; // Video not found
         }
 
-        $video['username'] = $userQuery->getUsernameById($video['uploaded_by']);
+        $video['username'] = $video['username'] ?? 'Unknown';
         $video['video_url'] = "/videos/{$video['video_id']}/{$video['video_id']}.mp4";
         $video['thumbnail_url'] = "/videos/{$video['video_id']}/thumbnail.jpg";
         $video['uploade_date'] = date("F j, Y", strtotime($video['uploaded_on']));

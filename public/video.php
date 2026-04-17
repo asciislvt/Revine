@@ -14,7 +14,8 @@ if ($videoId === null) {
     exit;
 }
 
-$queryResult = VideoQuery::getVideoById($videoId);
+$videoQuery = new VideoQuery();
+$queryResult = $videoQuery->getVideoById($videoId);
 
 if ($queryResult === null) {
     http_response_code(404);

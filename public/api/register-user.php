@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../app/auth/UserQuery.php';
+require_once __DIR__ . '/../../app/UserQuery.php';
 
-use Revine\Auth\UserQuery;
+use Revine\UserQuery;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

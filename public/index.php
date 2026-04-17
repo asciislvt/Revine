@@ -21,6 +21,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </header>
       <nav>
         <ul>
+          <li><a href="explore.php">Explore</a></li>
           <li><a href="upload.php">Upload</a></li>
           <?php if (!$isLoggedIn) : ?>
             <li><a href="login.php">Login</a></li>

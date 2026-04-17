@@ -31,7 +31,8 @@ if (!$isValidVideo) {
     $videoTitle = $_POST['title'];
     $videoDescription = $_POST['description'];
 
-    $uploaderResult = VideoUploader::upload($uploadedVideo, $videoTitle, $videoDescription, $_SESSION['user_id']);
+    $uploader = new VideoUploader();
+    $uploaderResult = $uploader->upload($uploadedVideo, $videoTitle, $videoDescription, $_SESSION['user_id']);
 
     if ($uploaderResult['status'] !== 'success') {
         http_response_code(500);

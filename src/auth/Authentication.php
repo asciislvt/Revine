@@ -2,7 +2,7 @@
 
 namespace Revine\Auth;
 
-use Revine\Auth\UserQuery;
+use Revine\UserQuery;
 
 class Authentiaction
 {
@@ -10,7 +10,7 @@ class Authentiaction
 
     public function __construct()
     {
-        require_once __DIR__ . '/UserQuery.php';
+        require_once __DIR__ . '/../UserQuery.php';
         $this->userQuery = new UserQuery();
     }
 

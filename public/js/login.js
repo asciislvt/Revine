@@ -23,9 +23,12 @@ form.addEventListener('submit', async (event) => {
     });
 
     if (response.ok) {
-      window.location.href = '/index.php';
-    } else {
-      displayError(result.error || 'Login failed. Please try again.');
+      const result = await response.json();
+      if (result.success) {
+        window.location.href = '/index.php';
+      } else {
+        displayError(result.error || 'Login failed. Please try again.');
+      }
     }
   } catch (error) {
     displayError('An error occurred while logging in. Please try again later.');
