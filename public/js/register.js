@@ -40,7 +40,13 @@ form.addEventListener('submit', async (event) => {
     if (response.ok) {
       window.location.href = '/login.php';
     } else {
-      displayError(result.error || 'Registration failed. Please try again.');
+      try {
+        const result = await response.json();
+        displayError(result.error);
+      } catch (parseError) {
+        displayError('Registration failed. Please try again.');
+      }
+
     }
   } catch (error) {
     displayError('An error occurred while registering. Please try again later.');

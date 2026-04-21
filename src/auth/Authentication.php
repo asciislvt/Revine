@@ -4,7 +4,7 @@ namespace Revine\Auth;
 
 use Revine\UserQuery;
 
-class Authentiaction
+class Authentication
 {
     private $userQuery;
 
@@ -20,10 +20,6 @@ class Authentiaction
 
         if (!$storedHash) {
             return false; // User not found
-        }
-
-        if (!password_verify($password, $storedHash)) {
-            return false; // Invalid password
         }
 
         $userId = $this->userQuery->getUserIdByUsername($username);

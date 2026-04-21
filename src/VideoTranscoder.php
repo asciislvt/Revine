@@ -8,15 +8,15 @@ class VideoTranscoder
     {
         exec("ffmpeg -version", $output, $returnCode);
         if ($returnCode !== 0) {
-            return [
-              "status" => "error",
-              "message" => "FFmpeg is not installed or not available in the system PATH.",
-            ];
+            throw new \Exception("FFmpeg is not installed or not available in the system PATH.");
         }
     }
 
     public function transcodeVideo($inputPath, $outputPath)
     {
+        $inputPath = escapeshellarg($inputPath);
+        $outputPath = escapeshellarg($outputPath);
+
         $ffmpegCommand = "ffmpeg -i $inputPath -t 10 \
                           -vf \"scale=1080:1350:force_original_aspect_ratio=decrease,\
                           pad=1080:1350:(ow-iw)/2:(oh-ih)/2\" \
@@ -40,6 +40,9 @@ class VideoTranscoder
 
     public function generateThumbnail($inputPath, $thumbnailPath)
     {
+        $inputPath = escapeshellarg($inputPath);
+        $thumbnailPath = escapeshellarg($thumbnailPath);
+
         $ffmpegCommand = "ffmpeg -i $inputPath \
                           -vf \"select='gte(t,2)',scale=320:-1\" \
                           -frames:v 1 $thumbnailPath";

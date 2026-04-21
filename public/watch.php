@@ -34,14 +34,25 @@ if ($queryResult === null) {
   </head>
   <body>
     <h1><?= htmlspecialchars($queryResult['title']) ?></h1>
-    <p><?= htmlspecialchars($queryResult['uploade_date']) ?></p>
+    <p><?= htmlspecialchars($queryResult['upload_date']) ?></p>
+    <p>Category: <?= htmlspecialchars($queryResult['category_name']) ?></p>
     <p>Uploaded by: <?= htmlspecialchars($queryResult['username']) ?></p
     <p><?= htmlspecialchars($queryResult['description']) ?></p>
     <video controls width="720" height="905">
       <source src="<?= htmlspecialchars($queryResult['video_url']); ?>" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
-    <p>Testing out thumbnail generation: </p>
-    <img src="<?= htmlspecialchars($queryResult['thumbnail_url']); ?>" alt="Video Thumbnail" />
+    <div id="comments">
+      <h2>Comments</h2>
+      <form id="comment-form" data-video-id="<?= htmlspecialchars($videoId) ?>">
+        <textarea name="comment" rows="4" cols="50"></textarea>
+        <button id="submit-comment">Submit Comment</button>
+        <p id="comment-error" style="color: red;"></p>
+      </form>
+      <div id="comments-list">
+        <!-- Comments will be loaded here -->
+      </div>
+    </div>
+    <script src="js/comments.js"></script>
   </body>
 </html>

@@ -43,12 +43,13 @@ class VideoQuery
 
     public function getVideoById($videoId)
     {
-        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
+        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username, c.category_name
                                     FROM videos v
                                     JOIN users u ON u.id = v.uploaded_by
+                                    JOIN categories c ON c.id = v.category
                                     WHERE v.video_id = :videoId");
 
-        $stmt->bindParam(':videoId', $videoId, \PDO::PARAM_INT);
+        $stmt->bindParam(':videoId', $videoId, \PDO::PARAM_STR);
         $stmt->execute();
 
         $video = $stmt->fetch();
@@ -60,7 +61,7 @@ class VideoQuery
         $video['username'] = $video['username'] ?? 'Unknown';
         $video['video_url'] = "/videos/{$video['video_id']}/{$video['video_id']}.mp4";
         $video['thumbnail_url'] = "/videos/{$video['video_id']}/thumbnail.jpg";
-        $video['uploade_date'] = date("F j, Y", strtotime($video['uploaded_on']));
+        $video['upload_date'] = date("F j, Y", strtotime($video['uploaded_on']));
 
         return $video;
     }

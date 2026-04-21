@@ -16,7 +16,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <div id="container">
       <header>
         <h1>Revine</h1>
-        <p>Hello, <?= ($isLoggedIn ? $_SESSION['username'] : "Stranger") ?>.</p>
+        <p>Hello, <?= ($isLoggedIn ? htmlspecialchars($_SESSION['username']) : "Stranger") ?>.</p>
         <p>Upload and share your videos with the world!</p>
       </header>
       <nav>

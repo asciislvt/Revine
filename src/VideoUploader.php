@@ -42,14 +42,14 @@ class VideoUploader
         }
 
         // Create unique ID for video
-        $videoId = self::generateUniqueId($videoFile['name']);
+        $videoId = $this->generateUniqueId($videoFile['name']);
 
         // Create temp and final directories and file paths
         $fileExtenstion = pathinfo($videoFile['name'], PATHINFO_EXTENSION);
 
         $tempDir = $this->TEMP_DIR . $videoId;
         $tempFilePath = $tempDir . '/' . $videoId . '_src.' . $fileExtenstion;
-        $tempDirResult = self::createDirectory($tempDir);
+        $tempDirResult = $this->createDirectory($tempDir);
 
         if ($tempDirResult !== true) {
             return $tempDirResult;
@@ -57,7 +57,7 @@ class VideoUploader
 
         $finalDir = $this->UPLOAD_DIR . $videoId;
         $finalFilePath = $finalDir . '/' . $videoId . '.' . $fileExtenstion;
-        $finalDirResult = self::createDirectory($finalDir);
+        $finalDirResult = $this->createDirectory($finalDir);
         if ($finalDirResult !== true) {
             return $finalDirResult;
         }
@@ -69,31 +69,29 @@ class VideoUploader
             ];
         }
 
-        http_response_code(202);
-
         // TRANSCODE VIDEO
         $videoTranscoder = new VideoTranscoder();
         $transcodeResult = $videoTranscoder->transcodeVideo($tempFilePath, $finalFilePath);
         $thumbnailResult = $videoTranscoder->generateThumbnail($finalFilePath, $finalDir . '/thumbnail.jpg');
 
         if ($transcodeResult !== true) {
-            self::cleanupTempFiles($tempFilePath, $tempDir);
-            self::cleanupFinalFiles($finalFilePath, $finalDir);
+            $this->cleanupTempFiles($tempFilePath, $tempDir);
+            $this->cleanupFinalFiles($finalFilePath, $finalDir);
             return $transcodeResult;
         } elseif ($thumbnailResult !== true) {
-            self::cleanupTempFiles($tempFilePath, $tempDir);
-            self::cleanupFinalFiles($finalFilePath, $finalDir);
+            $this->cleanupTempFiles($tempFilePath, $tempDir);
+            $this->cleanupFinalFiles($finalFilePath, $finalDir);
             return $thumbnailResult;
         }
 
-        $cleanup = self::cleanupTempFiles($tempFilePath, $tempDir);
+        $cleanup = $this->cleanupTempFiles($tempFilePath, $tempDir);
         if ($cleanup !== true) {
             return $cleanup;
         }
 
 
         // Aight we done, throw that bitch in the database.
-        $dbInsertResult = self::databaseInsert($videoId, $title, $description, $userId);
+        $dbInsertResult = $this->databaseInsert($videoId, $title, $description, $userId);
 
         if ($dbInsertResult !== true) {
             return $dbInsertResult;
@@ -110,8 +108,8 @@ class VideoUploader
     {
         require_once __DIR__ . '/DbConnection.php';
 
-        $sanitizedTitle = self::sanatizeTitle($title);
-        $sanitizedDescription = self::sanatizeDescription($description);
+        $sanitizedTitle = $this->sanitizeTitle($title);
+        $sanitizedDescription = $this->sanitizeDescription($description);
         $sanitizedUserId = intval($userId);
 
         $db = DbConnection::getInstance()->getConnection();
@@ -137,14 +135,14 @@ class VideoUploader
         return true;
     }
 
-    private function sanatizeTitle($title)
+    private function sanitizeTitle($title)
     {
         $title = trim(htmlspecialchars($title));
         $title = strip_tags($title);
         return $title;
     }
 
-    private function sanatizeDescription($description)
+    private function sanitizeDescription($description)
     {
         $description = trim(preg_replace('/\s+/', ' ', $description));
         $description = strip_tags($description);
@@ -159,7 +157,7 @@ class VideoUploader
             if (!mkdir($path, 0775, true)) {
                 return [
                   "status" => "error",
-                  "message" => "Failed to create directory: $path",
+                  "message" => "Failed to create directory...",
                 ];
             }
         }

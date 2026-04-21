@@ -1,6 +1,6 @@
 <?php
 
-use Revine\Auth\Authentiaction;
+use Revine\Auth\Authentication;
 
 require_once __DIR__ . '/../../app/auth/Authentication.php';
 
@@ -18,7 +18,7 @@ if (!isset($_POST['username'], $_POST['password'])) {
 }
 
 $username = $_POST['username'];
-$auth = new Authentiaction();
+$auth = new Authentication();
 
 $userAuth = $auth->authenticate($username, $_POST['password']);
 

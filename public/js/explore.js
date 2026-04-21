@@ -10,7 +10,6 @@ async function fetchVideos() {
     const response = await fetch('/api/get-videos.php');
     const videos = await response.json();
 
-    const link = document.createElement('link');
     videos.forEach(video => {
       videoGrid.appendChild(
         createVideoCard(video.video_id, video.title, video.username, video.uploaded_on)

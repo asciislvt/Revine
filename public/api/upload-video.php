@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if ($_SESSION['user_id'] === null) {
+if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized. Please log in to upload videos.']);
     exit;
@@ -23,7 +23,7 @@ $uploadedVideo = $_FILES['video-file'] ?? null;
 
 $isValidVideo = VideoValidator::validate($uploadedVideo);
 
-if (!$isValidVideo) {
+if ($isValidVideo !== true) {
     http_response_code(400);
     echo json_encode(['error' => $isValidVideo]);
     exit;

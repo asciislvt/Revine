@@ -10,7 +10,7 @@ export function createVideoCard(videoId, title, uploader, date) {
   const uploaderElement = document.createElement('p');
   const dateElement = document.createElement('p');
 
-  videoLink.href = `/video.php?id=${videoId}`
+  videoLink.href = `/watch.php?id=${videoId}`
 
   thumbnailImg.src = `/videos/${videoId}/thumbnail.jpg`
   thumbnailImg.onerror = () => {

@@ -25,7 +25,7 @@ form.addEventListener('submit', async (event) => {
 
       form.reset();
       videoUrl.textContent = `Video uploaded successfully! View it here!`;
-      videoUrl.href = `/video.php?id=${result.videoId}`;
+      videoUrl.href = `/watch.php?id=${result.videoId}`;
     } else {
       displayError('Upload failed. Please try again.');
     }

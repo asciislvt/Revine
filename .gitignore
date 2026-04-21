@@ -1,2 +1,4 @@
 # Essential shit to ignore
 .env
+.idea
+.php-cs-fixer.dist.php

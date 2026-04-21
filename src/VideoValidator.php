@@ -7,7 +7,9 @@ class VideoValidator
     public static function validate($videoFile)
     {
         $filePath = $videoFile['tmp_name'] ?? null;
-        if (file_exists($filePath)) {
+        if ($filePath === null && is_uploaded_file($filePath)) {
+            return "No video file uploaded.";
+        } elseif (file_exists($filePath)) {
             $probeCommand = (
             "ffprobe -v quiet -print_format json -select_streams v:0 -show_streams " . escapeshellarg($filePath)
             );
@@ -18,7 +20,7 @@ class VideoValidator
                 return "Invalid video type. Please upload a valid video file.";
             } elseif (!self::validateVideoSize($videoFile)) {
                 return "Video file size exceeds the limit of 300mb.";
-            } elseif (!self::validateVideoDuration($videoFile)) {
+            } elseif (!self::validateVideoDuration($probeJson)) {
                 return "Video duration exceeds the allowed limit.";
             } else {
                 return true;

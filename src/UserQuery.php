@@ -14,7 +14,7 @@ class UserQuery
         $this->db = DbConnection::getInstance()->getConnection();
     }
 
-    public function getUserByUsername($username)
+    public function getIdByUsername($username)
     {
         $stmt = $this->db->prepare("SELECT id FROM users WHERE username = :username");
         $stmt->bindParam(':username', $username, \PDO::PARAM_STR);
@@ -52,7 +52,7 @@ class UserQuery
 
     public function createUser($email, $username, $passhash)
     {
-        if ($this->getUserByUsername($username)) {
+        if ($this->getIdByUsername($username)) {
               return false; // Username already exists
         }
 
