@@ -52,3 +52,17 @@ create table comments
         foreign key (video_id) references videos (video_id)
 );
 
+create table likes
+(
+    id       int auto_increment
+        primary key,
+    video_id varchar(16)                  not null,
+    user_id  int                          not null,
+    liked_at date       default curdate() not null,
+    is_like  tinyint(1) default 1         not null,
+    constraint likes_users_id_fk
+        foreign key (user_id) references users (id),
+    constraint likes_videos_video_id_fk
+        foreign key (video_id) references videos (video_id)
+);
+
