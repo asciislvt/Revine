@@ -10,6 +10,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/common.css" />
     <title>Upload A Video | Revine</title>
   </head>
   <body>
@@ -35,9 +36,22 @@ $isLoggedIn = isset($_SESSION['user_id']);
             <textarea name="description" placeholder="Video Description"></textarea>
           </label>
           <br />
-          <input type="hidden" name="MAX_FILE_SIZE" value="300000000">
-          <input type="file" name="video-file" accept="video/*">
-          <p>Video must be under 300mb in size.</p>
+          <label>
+            Video Category:
+          <select name="category">
+            <option value="1">Music</option>
+            <option value="1">Comedy</option>
+            <option value="1">Education</option>
+            <option value="1">Gaming</option>
+          </select>
+          </label>
+          <br />
+          <label>
+            Upload Your Video:
+            <input type="hidden" name="MAX_FILE_SIZE" value="300000000">
+            <input type="file" name="video-file" accept="video/*">
+            <p>Video must be under 300mb in size.</p>
+          </label>
           <button id="submit-video">Upload</button>
           <p id="success-message"><a id="video-url"></a></p>
         </form>

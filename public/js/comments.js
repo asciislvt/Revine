@@ -15,9 +15,6 @@ commentForm.addEventListener('submit', async (event) => {
       method: 'POST',
       body: formData
     });
-
-    const result = await response.json();
-    console.log(result);
   } catch (error) {
     errorElement.textContent = 'An error occurred while posting your comment. Please try again later.';
   } finally {
@@ -42,9 +39,14 @@ async function reloadComments() {
       const usernameElement = document.createElement('strong');
       const timestampElement = document.createElement('small');
       const textElement = document.createElement('p');
+      const date = new Date(comment.comment_date).toLocaleDateString("en-US", {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
 
       usernameElement.textContent = comment.username;
-      timestampElement.textContent = new Date(comment.comment_date).toLocaleString();
+      timestampElement.textContent = date;
       textElement.textContent = comment.comment;
 
       commentElement.appendChild(usernameElement);

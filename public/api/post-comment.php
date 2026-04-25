@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../app/CommentQuery.php';
-
 session_start();
+
+require_once __DIR__ . '/../../app/CommentQuery.php';
 
 use Revine\CommentQuery;
 
@@ -20,13 +20,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $commentText = $_POST['comment'] ?? null;
 $videoId = $_POST['video_id'] ?? null;
-
-// http_response_code(200);
-// echo json_encode([
-//     'commentText' => $commentText,
-//     'videoId' => $videoId,
-//     'user_id' => $_SESSION['user_id']
-// ]);
 
 $commentQuery = new CommentQuery();
 $addCommentResult = $commentQuery->addComment($videoId, $_SESSION['user_id'], $commentText);
