@@ -30,8 +30,8 @@ class VideoTranscoder
 
         if ($returnCode !== 0) {
             return [
-              "status" => "error",
-              "message" => "Video transcoding failed with error code: $returnCode",
+                "status" => "error",
+                "message" => "Video transcoding failed with error code: $returnCode",
             ];
         }
 
@@ -51,8 +51,8 @@ class VideoTranscoder
 
         if ($returnCode !== 0) {
             return [
-              "status" => "error",
-              "message" => "Thumbnail generation failed with error code: $returnCode",
+                "status" => "error",
+                "message" => "Thumbnail generation failed with error code: $returnCode",
             ];
         }
 

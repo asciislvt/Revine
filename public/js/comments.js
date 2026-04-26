@@ -19,6 +19,7 @@ commentForm.addEventListener('submit', async (event) => {
     errorElement.textContent = 'An error occurred while posting your comment. Please try again later.';
   } finally {
     reloadComments();
+    commentForm.reset();
   }
 });
 

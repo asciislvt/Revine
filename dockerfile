@@ -12,7 +12,7 @@ RUN apt-get update; \
   a2enmod headers rewrite;
 
 COPY ./docker/apache/ /etc/apache2/conf-available/
-RUN a2enconf videos
+RUN a2enconf users && a2enconf videos
 
 # File size limit for uploads
 COPY ./docker/php/file_size.ini /usr/local/etc/php/conf.d/custom.ini

@@ -4,15 +4,25 @@
 }
 
 :root {
-  --primary-color: #000f0f;
-  --secondary-color: #f9f9f9;
-  --accent-color: #ff6f61;
+  --primary-color: #fcfdff;
+  --secondary-color: #333343;
+  --accent-2-color: #f47a6e;
+  --accent-1-color: #47b5a0;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--accent-1-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--accent-2-color);
 }
 
 /* Styling for the video-card container */
@@ -38,4 +48,9 @@ body {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+button.liked {
+  background-color: #007BFF;
+  color: white;
 }

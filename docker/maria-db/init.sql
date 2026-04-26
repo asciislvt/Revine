@@ -1,3 +1,5 @@
+use videosite;
+
 create table categories
 (
     id            int auto_increment
@@ -7,6 +9,12 @@ create table categories
         unique (category_name)
 );
 
+INSERT INTO videosite.categories (id, category_name) VALUES (0, 'Uncategorized');
+INSERT INTO videosite.categories (id, category_name) VALUES (1, 'Gaming');
+INSERT INTO videosite.categories (id, category_name) VALUES (2, 'Music');
+INSERT INTO videosite.categories (id, category_name) VALUES (3, 'Comedy');
+INSERT INTO videosite.categories (id, category_name) VALUES (4, 'Education');
+
 create table users
 (
     id            int auto_increment
@@ -14,6 +22,27 @@ create table users
     username      varchar(255) not null,
     password_hash varchar(255) not null,
     email         varchar(255) not null
+);
+
+create table followers
+(
+    user_id        int not null
+        primary key,
+    following_user int not null,
+    constraint followers_users_id_fk
+        foreign key (user_id) references users (id),
+    constraint followers_users_id_fk_2
+        foreign key (following_user) references users (id)
+);
+
+create table profiles
+(
+    user_id int                     not null
+        primary key,
+    bio     varchar(256) default '' null,
+    tagline varchar(128) default '' null,
+    constraint profiles_users_id_fk
+        foreign key (user_id) references users (id)
 );
 
 create table videos
@@ -65,4 +94,3 @@ create table likes
     constraint likes_videos_video_id_fk
         foreign key (video_id) references videos (video_id)
 );
-

@@ -16,28 +16,28 @@ class VideoUploader
         $this->UPLOAD_DIR = $uploadDir;
     }
 
-    public function upload($videoFile, $title, $description, $userId)
+    public function upload($videoFile, $title, $description, $category, $userId)
     {
         require_once __DIR__ . '/VideoTranscoder.php';
 
         if (empty($videoFile) || $videoFile['error'] !== UPLOAD_ERR_OK) {
             return [
-              "status" => "error",
-              "message" => "No video file uploaded or there was an upload error.",
+                "status" => "error",
+                "message" => "No video file uploaded or there was an upload error.",
             ];
         }
 
         if (empty($title) || empty($description)) {
             return [
-              "status" => "error",
-              "message" => "Video title and description are required.",
+                "status" => "error",
+                "message" => "Video title and description are required.",
             ];
         }
 
         if (!$userId) {
             return [
-              "status" => "error",
-              "message" => "User ID is required for video upload.",
+                "status" => "error",
+                "message" => "User ID is required for video upload.",
             ];
         }
 
@@ -64,8 +64,8 @@ class VideoUploader
 
         if (!move_uploaded_file($videoFile['tmp_name'], $tempFilePath)) {
             return [
-              "status" => "error",
-              "message" => "Failed to move uploaded file to temporary location.",
+                "status" => "error",
+                "message" => "Failed to move uploaded file to temporary location.",
             ];
         }
 
@@ -77,10 +77,12 @@ class VideoUploader
         if ($transcodeResult !== true) {
             $this->cleanupTempFiles($tempFilePath, $tempDir);
             $this->cleanupFinalFiles($finalFilePath, $finalDir);
+            error_log("Video transcoding failed for video ID $videoId: " . json_encode($transcodeResult));
             return $transcodeResult;
         } elseif ($thumbnailResult !== true) {
             $this->cleanupTempFiles($tempFilePath, $tempDir);
             $this->cleanupFinalFiles($finalFilePath, $finalDir);
+            error_log("Thumbnail generation failed for video ID $videoId: " . json_encode($thumbnailResult));
             return $thumbnailResult;
         }
 
@@ -91,20 +93,21 @@ class VideoUploader
 
 
         // Aight we done, throw that bitch in the database.
-        $dbInsertResult = $this->databaseInsert($videoId, $title, $description, $userId);
+        $dbInsertResult = $this->databaseInsert($videoId, $title, $description, $userId, $category);
 
         if ($dbInsertResult !== true) {
+            $this->cleanupFinalFiles($finalFilePath, $finalDir);
             return $dbInsertResult;
         }
 
         return [
-          "status" => "success",
-          "message" => "Video uploaded and transcoded successfully.",
-          "videoId" => $videoId,
+            "status" => "success",
+            "message" => "Video uploaded and transcoded successfully.",
+            "videoId" => $videoId,
         ];
     }
 
-    private function databaseInsert($videoId, $title, $description, $userId)
+    private function databaseInsert($videoId, $title, $description, $userId, $category)
     {
         require_once __DIR__ . '/DbConnection.php';
 
@@ -114,21 +117,22 @@ class VideoUploader
 
         $db = DbConnection::getInstance()->getConnection();
         $stmt = $db->prepare(
-            "INSERT INTO videos (title, description, video_id, uploaded_by) 
-             VALUES (:title, :description, :video_id, :uploaded_by)"
+            "INSERT INTO videos (title, description, video_id, uploaded_by, category) 
+             VALUES (:title, :description, :video_id, :uploaded_by, :category)"
         );
 
         $stmt->bindParam(':title', $sanitizedTitle, \PDO::PARAM_STR);
         $stmt->bindParam(':description', $sanitizedDescription, \PDO::PARAM_STR);
         $stmt->bindParam(':video_id', $videoId, \PDO::PARAM_STR);
         $stmt->bindParam(':uploaded_by', $sanitizedUserId, \PDO::PARAM_INT);
+        $stmt->bindParam(':category', $category, \PDO::PARAM_INT);
 
         $result = $stmt->execute();
 
         if (!$result) {
             return [
-              "status" => "error",
-              "message" => "Failed to insert video metadata into database.",
+                "status" => "error",
+                "message" => "Failed to insert video metadata into database.",
             ];
         }
 
@@ -156,8 +160,8 @@ class VideoUploader
         if (!is_dir($path)) {
             if (!mkdir($path, 0775, true)) {
                 return [
-                  "status" => "error",
-                  "message" => "Failed to create directory...",
+                    "status" => "error",
+                    "message" => "Failed to create directory...",
                 ];
             }
         }
@@ -179,8 +183,8 @@ class VideoUploader
 
         if (!$deleteTempResult || !$deleteTempDirResult) {
             return [
-              "status" => "error",
-              "message" => "Failed to clean up temporary files.",
+                "status" => "error",
+                "message" => "Failed to clean up temporary files.",
             ];
         }
 
@@ -194,8 +198,8 @@ class VideoUploader
 
         if (!$deleteFinalResult || !$deleteFinalDirResult) {
             return [
-              "status" => "error",
-              "message" => "Failed to clean up final files.",
+                "status" => "error",
+                "message" => "Failed to clean up final files.",
             ];
         }
 

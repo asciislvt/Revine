@@ -1,6 +1,5 @@
 export function createVideoCard(videoId, title, uploader, date) {
   const videoCard = document.createElement('div');
-  // const contentDiv = document.createElement('div');
   const thumbnailDiv = document.createElement('div');
   const infoDiv = document.createElement('div');
 
@@ -35,7 +34,6 @@ export function createVideoCard(videoId, title, uploader, date) {
 
   videoLink.appendChild(thumbnailDiv);
   videoLink.appendChild(infoDiv);
-  // videoLink.appendChild(contentDiv);
   videoLink.classList.add('video-link');
 
   videoCard.appendChild(videoLink);

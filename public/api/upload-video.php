@@ -7,6 +7,8 @@ require_once __DIR__ . '/../../app/VideoUploader.php';
 
 use Revine\VideoValidator, Revine\VideoUploader;
 
+// Must be logged in and use POST method to upload videos
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method Not Allowed. Please use POST.']);
@@ -30,9 +32,10 @@ if ($isValidVideo !== true) {
 } else {
     $videoTitle = $_POST['title'];
     $videoDescription = $_POST['description'];
+    $category = $_POST['category'] ?? 'Uncategorized'; // Default category if not provided
 
     $uploader = new VideoUploader();
-    $uploaderResult = $uploader->upload($uploadedVideo, $videoTitle, $videoDescription, $_SESSION['user_id']);
+    $uploaderResult = $uploader->upload($uploadedVideo, $videoTitle, $videoDescription, $category, $_SESSION['user_id']);
 
     if ($uploaderResult['status'] !== 'success') {
         http_response_code(500);

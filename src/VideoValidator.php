@@ -11,7 +11,7 @@ class VideoValidator
             return "No video file uploaded.";
         } elseif (file_exists($filePath)) {
             $probeCommand = (
-            "ffprobe -v quiet -print_format json -select_streams v:0 -show_streams " . escapeshellarg($filePath)
+                "ffprobe -v quiet -print_format json -select_streams v:0 -show_streams " . escapeshellarg($filePath)
             );
             $probeOutput = shell_exec($probeCommand);
             $probeJson = json_decode($probeOutput, true);
@@ -20,8 +20,6 @@ class VideoValidator
                 return "Invalid video type. Please upload a valid video file.";
             } elseif (!self::validateVideoSize($videoFile)) {
                 return "Video file size exceeds the limit of 300mb.";
-            } elseif (!self::validateVideoDuration($probeJson)) {
-                return "Video duration exceeds the allowed limit.";
             } else {
                 return true;
             }
