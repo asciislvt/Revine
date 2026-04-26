@@ -94,3 +94,16 @@ create table likes
     constraint likes_videos_video_id_fk
         foreign key (video_id) references videos (video_id)
 );
+
+create table views
+(
+    user_id   int                    not null
+        primary key,
+    video_id  varchar(16)            not null,
+    view_date date default curdate() null,
+    constraint views_users_id_fk
+        foreign key (user_id) references users (id),
+    constraint views_videos_video_id_fk
+        foreign key (video_id) references videos (video_id)
+);
+
