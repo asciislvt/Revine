@@ -12,8 +12,8 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 a {
@@ -22,7 +22,7 @@ a {
 }
 
 a:visited {
-  color: var(--accent-2-color);
+  color: var(--accent-1-color);
 }
 
 /* Styling for the video-card container */
@@ -53,4 +53,28 @@ a:visited {
 button.liked {
   background-color: #007BFF;
   color: white;
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

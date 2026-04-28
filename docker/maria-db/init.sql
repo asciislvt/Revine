@@ -9,11 +9,11 @@ create table categories
         unique (category_name)
 );
 
-INSERT INTO videosite.categories (id, category_name) VALUES (0, 'Uncategorized');
-INSERT INTO videosite.categories (id, category_name) VALUES (1, 'Gaming');
-INSERT INTO videosite.categories (id, category_name) VALUES (2, 'Music');
-INSERT INTO videosite.categories (id, category_name) VALUES (3, 'Comedy');
-INSERT INTO videosite.categories (id, category_name) VALUES (4, 'Education');
+INSERT INTO videosite.categories (category_name) VALUES ('Uncategorized');
+INSERT INTO videosite.categories (category_name) VALUES ('Gaming');
+INSERT INTO videosite.categories (category_name) VALUES ('Music');
+INSERT INTO videosite.categories (category_name) VALUES ('Comedy');
+INSERT INTO videosite.categories (category_name) VALUES ('Education');
 
 create table users
 (

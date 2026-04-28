@@ -52,13 +52,29 @@ class UserQuery
 
     public function getProfileInfoByUsername($username)
     {
-        $userId = $this->getIdByUsername($username);
-        if (!$userId) {
-            return null; // User not found
+        $userIdQuery = $this->getIdByUsername($username);
+
+        if (!$userIdQuery) {
+            return false;
         }
 
-        $stmt = $this->db->prepare("SELECT bio, tagline FROM profiles WHERE user_id = :id");
-        $stmt->bindParam(':id', $userId['id'], \PDO::PARAM_INT);
+        $stmt = $this->db->prepare("SELECT bio, tagline
+                                    FROM profiles
+                                    WHERE user_id = :id");
+
+        $stmt->bindParam(':id', $userIdQuery['id'], \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getProfileInfoByUserId($userId)
+    {
+        $stmt = $this->db->prepare("SELECT bio, tagline
+                                    FROM profiles
+                                    WHERE user_id = :id");
+
+        $stmt->bindParam(':id', $userId, \PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch();
@@ -67,7 +83,7 @@ class UserQuery
     public function createUser($email, $username, $passhash)
     {
         if ($this->getIdByUsername($username)) {
-            return false; // Username already exists
+            return false;
         }
 
         $stmt = $this->db->prepare("INSERT INTO users (email, username, password_hash)
@@ -80,6 +96,7 @@ class UserQuery
 
         if ($queryResult) {
             $userId = $this->getIdByUsername($username)['id'];
+
             if (!mkdir('/data/users/' . $username, 0755, true)) {
                 // Rollback user creation if directory creation fails
                 $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
@@ -96,5 +113,45 @@ class UserQuery
             $stmt->execute();
         }
         return $queryResult;
+    }
+
+    public function updateProfile($userId, $bio = null, $tagline = null)
+    {
+        if ($bio === null && $tagline === null) {
+            return false;
+        }
+
+        $existingProfile = $this->getProfileInfoByUsername($this->getUsernameById($userId));
+
+        if ($bio === null) {
+            $newBio = $existingProfile['bio'];
+        }
+
+        if ($tagline === null) {
+            $newTagline = $existingProfile['tagline'];
+        }
+
+        $stmt = $this->db->prepare("UPDATE profiles 
+                                    SET bio = :bio, tagline = :tagline
+                                    WHERE user_id = :user_id");
+
+        $stmt->bindParam(':bio', $newBio, \PDO::PARAM_STR);
+        $stmt->bindParam(':tagline', $newTagline, \PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function updateProfilePicture($userId, $picturePath)
+    {
+        $username = $this->getUsernameById($userId);
+
+        $destinationPath = "/data/users/$username/profile.jpg";
+
+        if (!move_uploaded_file($picturePath, $destinationPath)) {
+            return false;
+        }
+
+        return true;
     }
 }

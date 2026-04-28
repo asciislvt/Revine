@@ -1,0 +1,41 @@
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+header {
+  animation: slideInTop 0.8s ease-out;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+nav {
+  animation: slideInBottom backwards 0.8s 0.5s ease-out;
+  margin-bottom: 2rem;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  gap: 1rem;
+}
+
+nav ul li a {
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-1-color);
+  color: var(--primary-color);
+  border-radius: 4px;
+}
+
+nav ul li a:visited {
+  color: var(--primary-color);
+}
+
+nav ul li:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease-out;
+}

@@ -8,7 +8,6 @@ likeButton.addEventListener('click', async (event) => {
 });
 
 async function postLike(isLike) {
-  console.log(`Posting ${isLike ? 'like' : 'dislike'} for video ID: ${videoId}`);
   try {
     const response = await fetch('api/post-like.php', {
       method: 'POST',
@@ -16,7 +15,6 @@ async function postLike(isLike) {
     })
     const result = await response.json();
     fetchLikes();
-    console.log(result);
   } catch (error) {
     console.error("Error posting like:", error);
   }
@@ -28,7 +26,6 @@ async function fetchLikes() {
     const result = await response.json();
     updateLikeButton(result.hasLiked);
     likeCount.textContent = `${result.likeCount} Likes`;
-    console.log(result);
   } catch (error) {
     console.error("Error fetching likes:", error);
   }

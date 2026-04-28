@@ -14,11 +14,14 @@ if (isset($_SESSION['user_id'])) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/login.css" />
     <title>Register | Revine</title>
   </head>
   <body>
     <div id="container">
       <h1>Register</h1>
+      <p>Create an account to start sharing your videos with the world!</p>
 
       <form id="register-form" autocomplete="off" method="POST">
         <label>
