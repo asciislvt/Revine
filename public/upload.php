@@ -42,10 +42,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
           Video Category:
           <select name="category">
             <option value="0">Uncategorized</option>
-            <option value="1">Gaming</option>
-            <option value="2">Music</option>
-            <option value="3">Comedy</option>
-            <option value="4">Education</option>
+            <option value="1">Music</option>
+            <option value="2">Gaming</option>
+            <option value="3">Education</option>
+            <option value="4">Comedy</option>
           </select>
         </label>
         <br />

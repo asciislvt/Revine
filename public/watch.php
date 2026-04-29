@@ -8,6 +8,12 @@ session_start();
 
 $videoId = $_GET['id'] ?? null;
 
+if (!isset($_SESSION['user_id'])) {
+    $isLoggedIn = false;
+} else {
+    $isLoggedIn = true;
+}
+
 if ($videoId === null) {
     http_response_code(400);
     echo "Bad Request: Missing video ID.";
@@ -73,11 +79,15 @@ if ($queryResult === null) {
     <p id="like-count">0 Likes</p>
     <div id="comments">
       <h2>Comments</h2>
-      <form id="comment-form" data-video-id="<?= htmlspecialchars($videoId) ?>">
-        <textarea name="comment" rows="4" cols="50"></textarea>
-        <button id="submit-comment">Submit Comment</button>
-        <p id="comment-error" style="color: red;"></p>
-      </form>
+      <?php if ($isLoggedIn) : ?>
+        <form id="comment-form" data-video-id="<?= htmlspecialchars($videoId) ?>">
+          <textarea name="comment" rows="4" cols="50"></textarea>
+          <button id="submit-comment">Submit Comment</button>
+          <p id="comment-error" style="color: red;"></p>
+        </form>
+      <?php else : ?>
+        <p>You must be logged in to post comments.</p>
+      <?php endif; ?>
       <div id="comments-list">
         <!-- Comments loaded here :D -->
       </div>
