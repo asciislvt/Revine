@@ -1,0 +1,38 @@
+/* Navigation bar styles, should probably move to separate file */
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  gap: 3rem;
+}
+
+nav ul li {
+  font-size: 1.2rem;
+}
+
+nav ul li a {
+  background-color: var(--accent-1-color);
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+}
+
+nav ul li a:visited {
+  color: var(--primary-color);
+}

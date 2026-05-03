@@ -23,6 +23,8 @@ if ($videoId === null) {
 $videoQuery = new VideoQuery();
 $queryResult = $videoQuery->getVideoById($videoId);
 
+$hasPfp = is_dir("/data/users/{$queryResult['username']}/profile.jpg");
+
 if ($queryResult === null) {
     http_response_code(404);
     echo "Video not found.";
@@ -50,7 +52,7 @@ if ($queryResult === null) {
     <h1><?= $queryResult['title'], ENT_QUOTES ?></h1>
     <span>
       <a href="/profile.php?user=<?= urlencode($queryResult['username']) ?>">
-          <?php if (is_dir("/data/users/$queryResult[username]/profile.jpg")) : ?>
+          <?php if ($hasPfp) : ?>
             <img
               src="/users/<?= htmlspecialchars($queryResult['username']) ?>/profile.jpg"
               alt="Profile Picture"

@@ -121,14 +121,18 @@ class UserQuery
             return false;
         }
 
-        $existingProfile = $this->getProfileInfoByUsername($this->getUsernameById($userId));
+        $existingProfile = $this->getProfileInfoByUserId($userId);
 
         if ($bio === null) {
             $newBio = $existingProfile['bio'];
+        } else {
+            $newBio = $bio;
         }
 
         if ($tagline === null) {
             $newTagline = $existingProfile['tagline'];
+        } else {
+            $newTagline = $tagline;
         }
 
         $stmt = $this->db->prepare("UPDATE profiles 
@@ -144,12 +148,19 @@ class UserQuery
 
     public function updateProfilePicture($userId, $picturePath)
     {
+        if ($picturePath === null) {
+              return false;
+        }
+
         $username = $this->getUsernameById($userId);
 
         $destinationPath = "/data/users/$username/profile.jpg";
 
-        if (!move_uploaded_file($picturePath, $destinationPath)) {
-            return false;
+        if (is_file($destinationPath)) {
+            unlink($destinationPath);
+            if (!move_uploaded_file($picturePath, $destinationPath)) {
+                return false;
+            }
         }
 
         return true;
