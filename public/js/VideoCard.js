@@ -56,7 +56,6 @@ export function createMinimalVideoCard(videoId, title) {
   thumbnailImg.alt = `${title} thumbnail`;
 
   videoLink.appendChild(thumbnailImg);
-  videoLink.classList.add('video-link');
   videoCard.appendChild(videoLink);
   videoCard.classList.add('video-card');
 
