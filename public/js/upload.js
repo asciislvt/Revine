@@ -1,4 +1,5 @@
 const form = document.getElementById('upload-form');
+const submitButton = document.getElementById('submit-video');
 const errorElement = document.getElementById('error-message');
 const videoUrl = document.getElementById('video-url');
 
@@ -15,6 +16,7 @@ form.addEventListener('submit', async (event) => {
   }
 
   try {
+    submitButton.disabled = true;
     const response = await fetch('/api/upload-video.php', {
       method: 'POST',
       body: formData
@@ -28,10 +30,12 @@ form.addEventListener('submit', async (event) => {
       videoUrl.href = `/watch.php?id=${result.videoId}`;
     } else {
       displayError('Upload failed. Please try again.');
+      submitButton.disabled = false;
     }
   } catch (error) {
     displayError('An error occurred while uploading. Please try again later.');
     console.error('Error uploading video:', error);
+    submitButton.disabled = false;
   }
 });
 

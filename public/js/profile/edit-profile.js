@@ -4,16 +4,26 @@ const cancelButton = document.getElementById('cancel-edit-button');
 const imageInput = document.getElementById('profile-picture-input');
 const imageCropper = document.getElementById('img-cropper');
 const profileForm = document.getElementById('edit-profile-form');
+const editProfileContainer = document.getElementById('edit-profile-container');
 
 let croppieInstance;
 
 editButton.addEventListener('click', () => {
   console.log('Edit profile button clicked');
-  profileForm.style.display = 'block';
+  editProfileContainer.style.display = 'flex';
+  editProfileContainer.scrollIntoView({ behavior: 'smooth' });
+  editProfileContainer.classList.add('slide-in-top');
 });
 
 cancelButton.addEventListener('click', () => {
-  profileForm.style.display = 'none';
+  editProfileContainer.classList.remove('slide-in-top');
+  editProfileContainer.classList.add('slide-out-top');
+  editProfileContainer.addEventListener('animationend', () => {
+    editProfileContainer.style.display = 'none';
+    editProfileContainer.classList.remove('slide-out-top');
+  }, { once: true });
+  croppieInstance?.destroy();
+  croppieInstance = null;
 });
 
 imageInput.addEventListener('change', () => {
@@ -53,14 +63,22 @@ imageInput.addEventListener('change', () => {
 profileForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const formData = new FormData(profileForm);
-  const newPfp = await croppieInstance.result({
-    type: 'blob',
-    size: 'viewport',
-    format: 'jpeg',
-    quality: 1,
-    circle: false
-  });
-  formData.append('profile_picture', newPfp, 'profile.jpg');
+  let newPfp;
+  if (croppieInstance) {
+    newPfp = await croppieInstance.result({
+      type: 'blob',
+      size: 'viewport',
+      format: 'jpeg',
+      quality: 1,
+      circle: false
+    });
+  } else {
+    newPfp = null;
+  }
+
+  if (newPfp) {
+    formData.append('profile_picture', newPfp, 'profile.jpg');
+  }
 
   try {
     const response = await fetch('api/post-profile-edits.php', {

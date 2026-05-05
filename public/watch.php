@@ -23,7 +23,8 @@ if ($videoId === null) {
 $videoQuery = new VideoQuery();
 $queryResult = $videoQuery->getVideoById($videoId);
 
-$hasPfp = is_dir("/data/users/{$queryResult['username']}/profile.jpg");
+$username = $queryResult['username'] ?? null;
+$hasPfp = is_file("/data/users/$username/profile.jpg");
 
 if ($queryResult === null) {
     http_response_code(404);
@@ -51,10 +52,10 @@ if ($queryResult === null) {
     </nav>
     <h1><?= $queryResult['title'], ENT_QUOTES ?></h1>
     <span>
-      <a href="/profile.php?user=<?= urlencode($queryResult['username']) ?>">
+      <a href="/profile.php?user=<?= $queryResult['username'] ?>">
           <?php if ($hasPfp) : ?>
             <img
-              src="/users/<?= htmlspecialchars($queryResult['username']) ?>/profile.jpg"
+              src="/users/<?= $username ?>/profile.jpg"
               alt="Profile Picture"
               width="50"
               height="50"
@@ -69,6 +70,10 @@ if ($queryResult === null) {
           <?php endif; ?>
         <?= htmlspecialchars($queryResult['username']) ?>
       </a>
+      <button id="follow-button" value="follow"  data-username="<?= $username ?>">
+        Follow
+      </button>
+      <p id="follow-error" style="color: red; display: none;"></p>
     </span>
     <p><?= htmlspecialchars($queryResult['upload_date']) ?></p>
     <p>Category: <?= htmlspecialchars($queryResult['category_name']) ?></p>
@@ -96,5 +101,6 @@ if ($queryResult === null) {
     </div>
     <script src="js/comments.js"></script>
     <script src="js/likes.js"></script>
+    <script src="js/follow.js"></script>
   </body>
 </html>

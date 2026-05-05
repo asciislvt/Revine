@@ -35,8 +35,10 @@ function updateLikeButton(hasLiked) {
   if (hasLiked === 1) {
     likeButton.textContent = 'Liked';
     likeButton.classList.add('liked');
+    likeButton.classList.remove('like');
   } else {
     likeButton.textContent = 'Like';
     likeButton.classList.remove('liked');
+    likeButton.classList.add('like');
   }
 }

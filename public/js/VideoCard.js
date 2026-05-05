@@ -41,3 +41,25 @@ export function createVideoCard(videoId, title, uploader, date) {
 
   return videoCard;
 }
+
+export function createMinimalVideoCard(videoId, title) {
+  const videoCard = document.createElement('div');
+  const thumbnailImg = document.createElement('img');
+  const videoLink = document.createElement('a');
+
+  videoLink.href = `/watch.php?id=${videoId}`
+
+  thumbnailImg.src = `/videos/${videoId}/thumbnail.jpg`
+  thumbnailImg.onerror = () => {
+    thumbnailImg.src = '/images/default-thumbnail.jpg';
+  };
+  thumbnailImg.alt = `${title} thumbnail`;
+
+  videoLink.appendChild(thumbnailImg);
+  videoLink.classList.add('video-link');
+  videoCard.appendChild(videoLink);
+  videoCard.classList.add('video-card');
+
+  return videoCard;
+
+}

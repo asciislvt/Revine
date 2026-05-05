@@ -1,4 +1,4 @@
-import { createVideoCard } from '../VideoCard.js';
+import { createMinimalVideoCard } from '../VideoCard.js';
 
 const videoGrid = document.getElementById('video-grid');
 const statusElement = document.getElementById('status');
@@ -11,9 +11,12 @@ async function fetchVideos() {
     const response = await fetch('/api/get-videos.php?uploader=' + encodeURIComponent(username));
     const videos = await response.json();
 
+    if (videos.length === 0) {
+      videoGrid.appendChild(document.createElement('p')).textContent = 'No videos uploaded yet...';
+    }
     videos.forEach(video => {
       videoGrid.appendChild(
-        createVideoCard(video.video_id, video.title, video.username, video.uploaded_on)
+        createMinimalVideoCard(video.video_id, video.title)
       );
     });
   } catch (error) {

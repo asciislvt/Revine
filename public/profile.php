@@ -39,67 +39,103 @@ $hasPfp = is_file("/data/users/$selectedUsername/profile.jpg");
 </head>
 
 <body>
+  <header>
+    <h1>Revine</h1>
+    <nav>
+      <ul>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="explore.php">Explore</a></li>
+        <li><a href="api/logout.php">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
   <main>
-    <header>
-        <h1>Revine</h1>
-        <nav>
-          <ul>
-            <li><a href="index.php">Home</a></li>
-            <li><a href="explore.php">Explore</a></li>
-            <li><a href="api/logout.php">Logout</a></li>
-          </ul>
-        </nav>
-    </header>
     <?php if ($isOwnProfile) : ?>
-      <button id="edit-profile-button">Edit Profile</button>
-      <form id="edit-profile-form" style="display: none;">
-        <label>
-          Bio:
-          <textarea id="bio" name="bio" maxlength="256" rows="4" cols="50"><?= htmlspecialchars($profileInfo['bio']) ?></textarea>
-        </label>
-        <br />
-        <label>
-          Tagline:
-          <input
-            type="text"
-            maxlength="128"
-            id="tagline"
-            name="tagline"
-            value="<?= htmlspecialchars($profileInfo['tagline']) ?>"
-          />
-        </label>
-        <br />
-        <label>
-          Profile Picture:
-          <input type="hidden" name="MAX_FILE_SIZE" value="300000000" />
-          <input type="file" id="profile-picture-input" name="profile-picture" accept="image/png, image/jpeg" />
-        </label>
-        <div id="img-cropper" style="display: none;"></div>
-        <button type="button" class="img-cropper-result" style="display: none;">Confirm</button>
-        <br />
-        <button type="submit" id="save-edit-button">Save Changes</button>
-        <button type="button" id="cancel-edit-button">Cancel</button>
-      </form>
+      <div id="edit-profile-container">
+        <h2>Edit Profile</h2>
+        <form id="edit-profile-form">
+          <label>
+            Bio
+            <textarea
+              id="bio"
+              name="bio"
+              maxlength="256"
+              rows="4"
+              cols="50"><?= htmlspecialchars($profileInfo['bio']) ?></textarea>
+          </label>
+          <br />
+          <label>
+            Tagline
+            <input
+              type="text"
+              maxlength="128"
+              id="tagline"
+              name="tagline"
+              value="<?= htmlspecialchars($profileInfo['tagline']) ?>"
+            />
+          </label>
+          <br />
+          <label>
+            Profile Picture:
+            <input type="hidden" name="MAX_FILE_SIZE" value="300000000" />
+            <input type="file" id="profile-picture-input" name="profile-picture" accept="image/png, image/jpeg" />
+          </label>
+          <div id="img-cropper" style="display: none;"></div>
+          <button type="button" class="img-cropper-result" style="display: none;">Confirm</button>
+          <br />
+          <button type="submit" id="save-edit-button">
+            <svg>
+              <use href="images/assets/save.svg#save" />
+            </svg>
+          </button>
+          <button type="button" id="cancel-edit-button">
+            <svg>
+              <use href="images/assets/cancel.svg#cancel" />
+            </svg>
+          </button>
+        </form>
+      </div>
     <?php endif; ?>
     <?php if (!$selectedUsername) : ?>
       <p>No user selected. Please provide a username in the URL.</p>
     <?php else : ?>
       <div id="container">
-        <div id="profile-info">
-        <p>Showing profile for user: <strong><?= htmlspecialchars($selectedUsername) ?></strong></p>
-        <?php if ($hasPfp) : ?>
-          <img id="profile-picture" src="/users/<?= $selectedUsername ?>/profile.jpg" alt="Profile Picture" width="150" height="150" />
-        <?php else : ?>
-        <img id="profile-picture" src="images/default-profile.jpg" alt="Profile Picture" width="150" height="150" />
-        <?php endif; ?>
-          <?php
-            foreach ($profileInfo as $key => $value) {
-                echo "<p><strong>" . htmlspecialchars($key) . ":</strong> " . htmlspecialchars($value) . "</p>";
-            }
-            ?>
+        <div id="profile" class="slide-in-bottom">
+          <div id="profile-header">
+            <div id="header-button-container">
+              <?php if ($isOwnProfile) : ?>
+                <button class="header-buttons" id="edit-profile-button">
+                  <svg>
+                    <use href="images/assets/edit.svg#edit" />
+                  </svg>
+                </button>
+              <?php else : ?>
+                <button class="header-buttons" id="follow-button">
+                  <svg>
+                    <use href="images/assets/follow.svg#follow" />
+                  </svg>
+                </button>
+              <?php endif; ?>
+            </div>
+            <?php if ($hasPfp) : ?>
+              <img id="profile-picture" src="/users/<?= $selectedUsername ?>/profile.jpg" alt="Profile Picture" width="150" height="150" />
+            <?php else : ?>
+              <img id="profile-picture" src="images/default-profile.jpg" alt="Profile Picture" width="150" height="150" />
+            <?php endif; ?>
+          </div>
+          <div id="profile-info">
+            <h2><?= htmlspecialchars($selectedUsername) ?></h2>
+            <h3><?= htmlspecialchars($profileInfo['tagline']) ?></h3>
+            <p><?= nl2br(htmlspecialchars($profileInfo['bio'])) ?></p>
+          </div>
         </div>
-        <div id="video-grid" data-username="<?= htmlspecialchars($selectedUsername) ?>">
-          <p id="status">Loading videos...</p>
+        <div id="videos" class="slide-in-bottom">
+          <h2>Videos</h2>
+          <div
+            id="video-grid"
+            data-username="<?= htmlspecialchars($selectedUsername) ?>">
+            <p id="status">Loading videos...</p>
+          </div>
         </div>
       </div>
     <?php endif; ?>
@@ -108,6 +144,8 @@ $hasPfp = is_file("/data/users/$selectedUsername/profile.jpg");
   <?php if ($isOwnProfile) : ?>
     <script type="module" src="js/profile/edit-profile.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+  <?php else : ?>
+    <script type="module" src="js/profile/follow.js"></script>
   <?php endif; ?>
 </body>
 

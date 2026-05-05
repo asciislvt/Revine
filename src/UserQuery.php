@@ -161,6 +161,10 @@ class UserQuery
             if (!move_uploaded_file($picturePath, $destinationPath)) {
                 return false;
             }
+        } else {
+            if (!move_uploaded_file($picturePath, $destinationPath)) {
+                return false;
+            }
         }
 
         return true;

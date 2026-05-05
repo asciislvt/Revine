@@ -9,11 +9,11 @@ create table categories
         unique (category_name)
 );
 
-INSERT INTO videosite.categories (category_name) VALUES ('Uncategorized');
-INSERT INTO videosite.categories (category_name) VALUES ('Gaming');
-INSERT INTO videosite.categories (category_name) VALUES ('Music');
-INSERT INTO videosite.categories (category_name) VALUES ('Comedy');
-INSERT INTO videosite.categories (category_name) VALUES ('Education');
+INSERT INTO videosite.categories (id, category_name) VALUES (4, 'Comedy');
+INSERT INTO videosite.categories (id, category_name) VALUES (3, 'Education');
+INSERT INTO videosite.categories (id, category_name) VALUES (2, 'Gaming');
+INSERT INTO videosite.categories (id, category_name) VALUES (1, 'Music');
+INSERT INTO videosite.categories (id, category_name) VALUES (5, 'Uncategorized');
 
 create table users
 (
@@ -26,7 +26,7 @@ create table users
 
 create table followers
 (
-    user_id        int not null
+    user_id        int(255) auto_increment
         primary key,
     following_user int not null,
     constraint followers_users_id_fk

@@ -36,7 +36,9 @@ async function reloadComments() {
     }
 
     comments.forEach(comment => {
+      const container = document.createElement('div');
       const commentElement = document.createElement('div');
+      const pfpElement = document.createElement('img');
       const usernameElement = document.createElement('strong');
       const timestampElement = document.createElement('small');
       const textElement = document.createElement('p');
@@ -49,12 +51,19 @@ async function reloadComments() {
       usernameElement.textContent = comment.username;
       timestampElement.textContent = date;
       textElement.textContent = comment.comment;
+      pfpElement.src = `/users/${comment.username}/profile.jpg`;
+      pfpElement.alt = `${comment.username}'s profile picture`;
+      pfpElement.height = 40;
+      pfpElement.width = 40;
 
       commentElement.appendChild(usernameElement);
       commentElement.appendChild(timestampElement);
       commentElement.appendChild(textElement);
 
-      commentsContainer.appendChild(commentElement);
+      container.appendChild(pfpElement);
+      container.appendChild(commentElement);
+
+      commentsContainer.appendChild(container);
     });
   } catch (error) {
     console.error('Error loading comments:', error);
