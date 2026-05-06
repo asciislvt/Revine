@@ -1,11 +1,11 @@
 const followButton = document.getElementById('follow-button');
+const icon = followButton.querySelector('svg use');
 const errorMessage = document.getElementById('follow-error');
 
 fetchFollowStatus();
 
 followButton.addEventListener('click', async (event) => {
   event.preventDefault();
-  console.log('Follow button clicked');
 
   try {
     const userToFollow = followButton.dataset.username;
@@ -35,17 +35,18 @@ async function fetchFollowStatus() {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Follow status:', data.isFollowing);
+
       if (data.isFollowing) {
         followButton.classList.remove('follow');
         followButton.classList.add('unfollow');
-        followButton.textContent = 'Unfollow';
+        icon.setAttribute('href', 'images/assets/unfollow.svg#unfollow');
       } else {
         followButton.classList.remove('unfollow');
         followButton.classList.add('follow');
-        followButton.textContent = 'Follow';
+        icon.setAttribute('href', 'images/assets/follow.svg#follow');
       }
     }
   } catch (error) {
+    console.error('Error fetching follow status:', error);
   }
 }

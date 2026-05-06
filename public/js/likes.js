@@ -1,4 +1,5 @@
 const likeButton = document.getElementById('like-button');
+const likeIcon = likeButton.querySelector('svg use');
 const likeCount = document.getElementById('like-count');
 
 fetchLikes();
@@ -33,11 +34,11 @@ async function fetchLikes() {
 
 function updateLikeButton(hasLiked) {
   if (hasLiked === 1) {
-    likeButton.textContent = 'Liked';
+    likeIcon.setAttribute('href', 'images/assets/unlike.svg#unlike');
     likeButton.classList.add('liked');
     likeButton.classList.remove('like');
   } else {
-    likeButton.textContent = 'Like';
+    likeIcon.setAttribute('href', 'images/assets/like.svg#like');
     likeButton.classList.remove('liked');
     likeButton.classList.add('like');
   }

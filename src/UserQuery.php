@@ -68,6 +68,30 @@ class UserQuery
         return $stmt->fetch();
     }
 
+    public function getProfileStatsByUsername($username)
+    {
+        $userIdQuery = $this->getIdByUsername($username);
+
+        if (!$userIdQuery) {
+            return false;
+        }
+
+        $stmt = $this->db->prepare("SELECT 
+                                        (SELECT COUNT(*) FROM followers WHERE following_user = :id1) AS following,
+                                        (SELECT COUNT(*) FROM followers WHERE user_id = :id2) AS followers,
+                                        (SELECT COUNT(*) FROM videos WHERE uploaded_by = :id3) AS videos
+                                        FROM users
+                                        WHERE id = :id");
+
+        $stmt->bindParam(':id', $userIdQuery['id'], \PDO::PARAM_INT);
+        $stmt->bindParam(':id1', $userIdQuery['id'], \PDO::PARAM_INT);
+        $stmt->bindParam(':id2', $userIdQuery['id'], \PDO::PARAM_INT);
+        $stmt->bindParam(':id3', $userIdQuery['id'], \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
     public function getProfileInfoByUserId($userId)
     {
         $stmt = $this->db->prepare("SELECT bio, tagline

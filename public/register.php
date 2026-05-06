@@ -15,10 +15,12 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/navigation-bar.css" />
     <link rel="stylesheet" href="css/login.css" />
     <title>Register | Revine</title>
   </head>
   <body>
+    <?php include 'template/header.php'; ?>
     <div id="container">
       <h1>Register</h1>
       <p>Create an account to start sharing your videos with the world!</p>

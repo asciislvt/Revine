@@ -57,7 +57,7 @@ export function createMinimalVideoCard(videoId, title) {
 
   videoLink.appendChild(thumbnailImg);
   videoCard.appendChild(videoLink);
-  videoCard.classList.add('video-card');
+  videoCard.classList.add('minimal-video-card');
 
   return videoCard;
 

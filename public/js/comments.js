@@ -38,6 +38,7 @@ async function reloadComments() {
     comments.forEach(comment => {
       const container = document.createElement('div');
       const commentElement = document.createElement('div');
+      const userLink = document.createElement('a');
       const pfpElement = document.createElement('img');
       const usernameElement = document.createElement('strong');
       const timestampElement = document.createElement('small');
@@ -53,14 +54,22 @@ async function reloadComments() {
       textElement.textContent = comment.comment;
       pfpElement.src = `/users/${comment.username}/profile.jpg`;
       pfpElement.alt = `${comment.username}'s profile picture`;
+      pfpElement.onerror = () => {
+        pfpElement.src = 'images/default-profile.jpg';
+      }
+      pfpElement.classList.add('comment-pfp');
       pfpElement.height = 40;
       pfpElement.width = 40;
 
-      commentElement.appendChild(usernameElement);
+      userLink.href = `/profile.php?user=${comment.username}`;
+      userLink.appendChild(pfpElement);
+      userLink.appendChild(usernameElement);
+
+      commentElement.appendChild(userLink);
       commentElement.appendChild(timestampElement);
       commentElement.appendChild(textElement);
 
-      container.appendChild(pfpElement);
+      // container.appendChild(pfpElement);
       container.appendChild(commentElement);
 
       commentsContainer.appendChild(container);

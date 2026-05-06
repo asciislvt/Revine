@@ -18,16 +18,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 </head>
 
 <body>
-  <header>
-    <h1>Revine</h1>
-    <nav>
-      <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="explore.php">Explore</a></li>
-        <li><a href="api/logout.php">Logout</a></li>
-      </ul>
-    </nav>
-  </header>
+  <?php include 'template/header.php'; ?>
   <main>
     <div id="container">
       <h1>Upload A Video</h1>
