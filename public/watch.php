@@ -56,6 +56,7 @@ if ($queryResult === null) {
 
 <body>
   <?php include 'template/header.php'; ?>
+  <main>
   <div id="container">
 
     <div id="video-container">
@@ -65,19 +66,21 @@ if ($queryResult === null) {
           <source src="<?= htmlspecialchars($queryResult['video_url']); ?>" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <button class="ui-button" id="like-button" value="like">
-          <svg>
-            <use href="images/assets/like.svg#like" />
-          </svg>
-        </button>
-        <p id="like-count">0 Likes</p>
+        <div id="like-container">
+          <button class="ui-button" id="like-button" value="like">
+            <svg>
+              <use href="images/assets/like.svg#like" />
+            </svg>
+          </button>
+          <p id="like-count">0</p>
+        </div>
       </div>
 
       <div id="video-info">
         <h1><?= $queryResult['title'], ENT_QUOTES ?></h1>
         <p><?= htmlspecialchars($queryResult['upload_date']) ?></p>
-        <p>Category: <?= htmlspecialchars($queryResult['category_name']) ?></p>
         <p><?= $queryResult['description'] ?></p>
+          <p>Category: <?= htmlspecialchars($queryResult['category_name']) ?></p>
       </div>
 
     </div>
@@ -151,6 +154,7 @@ if ($queryResult === null) {
   </div>
   <div id="comments">
   </div>
+  </main>
   <script src="js/comments.js"></script>
   <script src="js/likes.js"></script>
   <script src="js/follow.js"></script>

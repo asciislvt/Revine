@@ -17,10 +17,10 @@ session_start();
   <body>
     <?php include 'template/header.php'; ?>
     <label>
-      Sort By:
-      <select name="order-by" id="order-by">
-        <option value="recent">Most Recent</option>
-        <option value="trending">Trending</option>
+        Sort By:
+        <select name="order-by" id="order-by">
+          <option value="recent">Most Recent</option>
+          <option value="trending">Trending</option>
       </select>
     </label>
     <div id="video-grid">

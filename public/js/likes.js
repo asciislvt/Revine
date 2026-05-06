@@ -26,7 +26,7 @@ async function fetchLikes() {
     const response = await fetch('api/get-likes.php?videoId=' + videoId);
     const result = await response.json();
     updateLikeButton(result.hasLiked);
-    likeCount.textContent = `${result.likeCount} Likes`;
+    likeCount.textContent = `${result.likeCount}`;
   } catch (error) {
     console.error("Error fetching likes:", error);
   }

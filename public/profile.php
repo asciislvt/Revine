@@ -83,7 +83,7 @@ $hasPfp = is_file("/data/users/$selectedUsername/profile.jpg");
     <p>No user selected. Please provide a username in the URL.</p>
     <?php else : ?>
     <div id="container">
-      <div id="profile" class="slide-in-bottom">
+      <div id="profile" class="slide-in-top">
         <div id="profile-header">
           <div id="header-button-container">
             <?php if ($isOwnProfile) : ?>
