@@ -78,7 +78,13 @@ if ($queryResult === null) {
 
         <div id="video-info">
           <div id="video-title">
-            <h1><?= $queryResult['title'], ENT_QUOTES ?></h1>
+              <h1
+                class="
+                <?php if (strlen($queryResult['title']) > 20) : ?>
+                  long-title
+                <?php endif; ?>
+                "
+              ><?= htmlspecialchars($queryResult['title'], ENT_QUOTES) ?></h1>
             <div id="video-extras">
               <p><?= htmlspecialchars($queryResult['upload_date']) ?></p>
               <p><?= htmlspecialchars($queryResult['category_name']) ?></p>
@@ -93,7 +99,7 @@ if ($queryResult === null) {
 
         <div id="uploader">
           <div id="uploader-header">
-            <?php if ($username !== $_SESSION['username']) : ?>
+            <?php if ($isLoggedIn && $username !== $_SESSION['username']) : ?>
             <button class="ui-button" id="follow-button" value="follow" data-username="<?= $username ?>">
               <svg>
                 <use href="images/assets/follow.svg#follow" />
@@ -171,7 +177,6 @@ if ($queryResult === null) {
     controls: [
       'play-large',
       'current-time',
-      'duration',
       'mute',
       'volume',
       'fullscreen',

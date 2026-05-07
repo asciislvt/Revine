@@ -19,6 +19,7 @@
 }
 
 #video-info {
+  position: relative;
   background-color: var(--secondary-color);
   color: var(--primary-color);
   /* border-left: 2px solid var(--primary-color);
@@ -34,6 +35,28 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+#video-title h1 {
+  max-width: 20rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color 0.2s ease, padding 0.2s ease, border 0.2s ease;
+}
+
+#video-title h1:hover.long-title {
+  background-color: var(--secondary-color);
+  padding: 1rem;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  text-overflow: clip;
+  white-space: normal;
+  overflow: visible;
 }
 
 #video-extras {
