@@ -2,11 +2,15 @@
 
 require_once __DIR__ . '/../../app/VideoQuery.php';
 
+use Revine\VideoQuery;
+
 $category = $_GET['category'] ?? null;
 $uploader = $_GET['uploader'] ?? null;
 $search = $_GET['search'] ?? null;
 
-use Revine\VideoQuery;
+$filter = $_GET['filter'] ?? 'recent';
+
+
 
 $videoQuery = new VideoQuery();
 if ($category !== null) {

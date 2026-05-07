@@ -2,6 +2,10 @@ import { createVideoCard } from './VideoCard.js';
 
 const videoGrid = document.getElementById('video-grid');
 const statusElement = document.getElementById('status');
+const recentButton = document.getElementById('recent-button');
+const followingButton = document.getElementById('following-button');
+const trendingButton = document.getElementById('trending-button');
+const mostViewedButton = document.getElementById('most-viewed-button');
 
 fetchVideos();
 

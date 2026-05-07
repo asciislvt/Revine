@@ -2,6 +2,8 @@
 
 session_start();
 
+$isLoggedIn = isset($_SESSION['user_id']);
+
 ?>
 
 <!DOCTYPE html>
@@ -16,16 +18,22 @@ session_start();
   </head>
   <body>
     <?php include 'template/header.php'; ?>
-    <label>
-        Sort By:
-        <select name="order-by" id="order-by">
-          <option value="recent">Most Recent</option>
-          <option value="trending">Trending</option>
-      </select>
-    </label>
-    <div id="video-grid">
-      <p id="status">Loading videos...</p>
-    </div>
+    <main>
+      <div id="container">
+        <div id="explore-options">
+          <button id="recent-button">Recent</button>
+          <?php if ($isLoggedIn) : ?>
+            <button id="following-button">Following</button>
+          <?php endif; ?>
+          <button id="trending-button" class="active">Trending</button>
+          <button id="most-viewed-button">Most Viewed</button>
+        </div>
+
+        <div id="video-grid">
+          <p id="status">Loading videos...</p>
+        </div>
+      </div>
+    </main>
     <script type="module" src="js/explore.js"></script>
   </body>
 </html>
