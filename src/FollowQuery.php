@@ -59,4 +59,18 @@ class FollowQuery
         $stmt->execute();
         return $stmt->fetchColumn();
     }
+
+    public function getFollowingList($userId)
+    {
+        $stmt = $this->db->prepare("SELECT u.username FROM followers f
+                                    JOIN users u ON f.user_id = u.id
+                                    JOIN users target ON f.following_user = target.id
+                                    WHERE target.id = :user_id");
+
+        $stmt->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $stmt->execute();
+        // $log = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        // error_log("Following list result: " . print_r($log, true)); // Debug log
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN);
+    }
 }

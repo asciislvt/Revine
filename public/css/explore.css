@@ -39,3 +39,32 @@
   box-shadow: 0 0 16px rgba(255, 255, 255, 0.879);
   transform: scale(1.05);
 }
+
+#explore-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.explore-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--accent-1-color);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.explore-button:hover {
+  background-color: var(--accent-2-color);
+  transform: translateY(-2px);
+}
+
+.explore-button.active {
+  border: 2px solid var(--secondary-color);
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  transform: translateY(4px);
+}

@@ -8,7 +8,7 @@ fetchVideos();
 
 async function fetchVideos() {
   try {
-    const response = await fetch('/api/get-videos.php?uploader=' + encodeURIComponent(username));
+    const response = await fetch('/api/get-videos.php?fetchType=byUser&uploader=' + encodeURIComponent(username));
     const videos = await response.json();
 
     if (videos.length === 0) {

@@ -7,8 +7,14 @@ reloadComments();
 
 commentForm.addEventListener('submit', async (event) => {
   event.preventDefault();
+  errorElement.textContent = '';
   const formData = new FormData(commentForm);
   formData.append('video_id', videoId);
+
+  if (!formData.get('comment').trim()) {
+    errorElement.textContent = 'Comment cannot be empty.';
+    return;
+  }
 
   try {
     const response = await fetch('api/post-comment.php', {
@@ -38,6 +44,7 @@ async function reloadComments() {
     comments.forEach(comment => {
       const container = document.createElement('div');
       const commentElement = document.createElement('div');
+      const commentHeader = document.createElement('div');
       const userLink = document.createElement('a');
       const pfpElement = document.createElement('img');
       const usernameElement = document.createElement('strong');
@@ -65,12 +72,15 @@ async function reloadComments() {
       userLink.appendChild(pfpElement);
       userLink.appendChild(usernameElement);
 
-      commentElement.appendChild(userLink);
-      commentElement.appendChild(timestampElement);
+      commentHeader.appendChild(userLink);
+      commentHeader.appendChild(timestampElement);
+      commentHeader.classList.add('comment-header');
       commentElement.appendChild(textElement);
-
-      // container.appendChild(pfpElement);
+      commentElement.classList.add('comment');
+      container.appendChild(commentHeader);
       container.appendChild(commentElement);
+      container.classList.add('comment-container');
+
 
       commentsContainer.appendChild(container);
     });

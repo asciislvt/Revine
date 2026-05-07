@@ -4,7 +4,9 @@ namespace Revine;
 
 use Revine\DbConnection,
 
-    Revine\UserQuery;
+    Revine\UserQuery,
+    
+    Revine\FollowQuery;
 
 class VideoQuery
 {
@@ -29,32 +31,6 @@ class VideoQuery
         return $this->getVideosByUserId($userId);
     }
 
-    public function searchVideos($searchTerm)
-    {
-        $stmt = $this->db->prepare("SELECT video_id, title, description, uploaded_on 
-                                    FROM videos
-                                    WHERE title LIKE :searchTerm 
-                                    OR description LIKE :searchTerm
-                                    ORDER BY uploaded_on DESC");
-        $likeTerm = '%' . $searchTerm . '%';
-        $stmt->bindParam(':searchTerm', $likeTerm, \PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
-    public function getVideosByCategory($categoryId)
-    {
-        $stmt = $this->db->prepare("SELECT video_id, title, description, uploaded_on
-                                    FROM videos
-                                    WHERE category = :categoryId
-                                    ORDER BY uploaded_on DESC");
-        $stmt->bindParam(':categoryId', $categoryId, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
     public function getRecentlyUploaded()
     {
 
@@ -68,6 +44,50 @@ class VideoQuery
         return $stmt->fetchAll();
     }
 
+    public function getTrendingVideos()
+    {
+        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username, COUNT(l.video_id) AS total_likes
+                                    FROM videos v
+                                    JOIN users u ON u.id = v.uploaded_by
+                                    LEFT JOIN likes l ON v.video_id = l.video_id
+                                    GROUP BY v.video_id
+                                    ORDER BY total_likes DESC
+                                    LIMIT 10 OFFSET 0;");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getFollowingVideos($userId)
+    {
+        require_once __DIR__ . '/FollowQuery.php';
+        // error_log("Getting following videos for user ID: $userId"); // Debug log
+        $followQuery = new FollowQuery();
+        $followingList = $followQuery->getFollowingList($userId);
+        // error_log("Following list for user ID $userId: " . print_r($followingList, true)); // Debug log
+            if (empty($followingList)) {
+                // error_log("User ID $userId is not following anyone."); // Debug log
+                return []; // No following users, return empty array
+            } else {
+                // error_log("User ID $userId is following " . count($followingList) . " users."); // Debug log
+                $placeholders = implode(',', array_fill(0, count($followingList), '?'));
+                $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
+                                            FROM videos v
+                                            JOIN users u ON u.id = v.uploaded_by
+                                            WHERE u.username IN ($placeholders)
+                                            ORDER BY v.uploaded_on DESC
+                                            LIMIT 10 OFFSET 0;");
+
+                foreach ($followingList as $index => $username) {
+                    $stmt->bindValue($index + 1, $username, \PDO::PARAM_STR);
+                }
+
+                $stmt->execute();
+                return $stmt->fetchAll();
+            }
+    }
+
     public function getVideosByUserId($userId)
     {
         $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
@@ -76,18 +96,6 @@ class VideoQuery
                                     WHERE v.uploaded_by = :userId
                                     ORDER BY v.uploaded_on DESC");
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
-    public function getTrending()
-    {
-        $stmt = $this->db->prepare("SELECT v.video_id, v.title, v.description, v.uploaded_on, u.username
-                                    FROM videos v
-                                    JOIN users u ON u.id = v.uploaded_by
-                                    ORDER BY v.view_count DESC
-                                    LIMIT 10 OFFSET 0;");
         $stmt->execute();
 
         return $stmt->fetchAll();
